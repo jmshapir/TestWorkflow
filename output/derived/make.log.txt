@@ -1,0 +1,1613 @@
+
+ make.py started: 2016-06-27 20:24:51 C:\Users\yfei\Google Drive\Francesco_Yusheng\derived\DataBooks\code 
+
+
+Path: gslab_make
+URL: https://econ-gentzkow-svn.stanford.edu/repos/main/trunk/lib/python/gslab_make
+Relative URL: ^/trunk/lib/python/gslab_make
+Repository Root: https://econ-gentzkow-svn.stanford.edu/repos/main
+Repository UUID: 89b4331b-4301-411a-8e06-9c78d9cdb83d
+Revision: 34607
+Node Kind: directory
+Last Changed Author: jwchoi2
+Last Changed Rev: 33502
+Last Changed Date: 2016-02-07 20:40:17 -0500 (Sun, 07 Feb 2016)
+
+
+
+Execute:  %STATAEXE% /e do "./build.do"
+
+  ___  ____  ____  ____  ____ (R)
+ /__    /   ____/   /   ____/
+___/   /   /___/   /   /___/   14.1   Copyright 1985-2015 StataCorp LP
+  Statistics/Data Analysis            StataCorp
+                                      4905 Lakeway Drive
+     MP - Parallel Edition            College Station, Texas 77845 USA
+                                      800-STATA-PC        http://www.stata.com
+                                      979-696-4600        stata@stata.com
+                                      979-696-4601 (fax)
+
+10-user 16-core Stata network perpetual license:
+       Serial number:  501406206055
+         Licensed to:  ECONUSER
+                       Brown University
+
+Notes:
+      1.  Stata is running in batch mode.
+      2.  Unicode is supported; see help unicode_advice.
+      3.  More than 2 billion observations are allowed; see help obs_advice.
+      4.  Maximum number of variables is set to 5000; see help set_maxvar.
+
+
+running C:\Program Files (x86)\Stata14\profile.do ...
+
+. do ./build.do 
+
+. clear
+
+. version 12
+
+. set more off
+
+. adopath + ../input/lib/stata/gslab_misc/ado
+  [1]  (BASE)      "C:\Program Files (x86)\Stata14\ado\base/"
+  [2]  (SITE)      "C:\Program Files (x86)\Stata14\ado\site/"
+  [3]              "."
+  [4]  (PERSONAL)  "c:\ado\personal/"
+  [5]  (PLUS)      "c:\ado\plus/"
+  [6]  (OLDPLACE)  "c:\ado/"
+  [7]              "../input/lib/stata/gslab_misc/ado"
+
+. preliminaries
+
+. 
+. program main
+  1.     prepare_data_1970
+  2.     prepare_data_1980
+  3.     prepare_data_1990
+  4.     prepare_data_2000
+  5.     merge_files
+  6. end
+
+. 
+. program prepare_data_1970
+  1.     use "../external/raw_databooks/1947-1977/07736-0001-Data.dta", clear
+  2.         
+.     rename FIPSTATE fipstate
+  3.     rename FIPSCNTY fipscnty
+  4.     rename AREANAME areaname_1970
+  5.         rename CC00004F land_area_1970_f
+  6.         rename CC00004 land_area_1970
+  7.     rename CC00015F tot_pop_1970a_f
+  8.     rename CC00015 tot_pop_1970a
+  9.     rename CC00016F tot_pop_1970b_f
+ 10.     rename CC00016 tot_pop_1970b
+ 11.     rename CC00052F white_pop_1970_f
+ 12.     rename CC00052 white_pop_1970
+ 13.     rename CC00056F black_pop_pct_1970_f
+ 14.     rename CC00056 black_pop_pct_1970
+ 15.     rename CC00081F hispanic_pop_pct_1970_f
+ 16.     rename CC00081 hispanic_pop_pct_1970
+ 17.     rename CC00123F pop_25_om_1970_f
+ 18.     rename CC00123 pop_25_om_1970
+ 19.     rename CC00128F pop_25_om_hs_pct_1970_f
+ 20.     rename CC00128 pop_25_om_hs_pct_1970
+ 21.     rename CC00129F pop_25_om_coll_pct_1970_f
+ 22.     rename CC00129 pop_25_om_coll_pct_1970
+ 23.     rename CC00436F serious_crimes_1975_f
+ 24.     rename CC00436 serious_crimes_1975
+ 25.     rename CC00437F crime_rate_1975_f
+ 26.     rename CC00437 crime_rate_1975
+ 27.         rename CC00438F robberies_1975_f
+ 28.         rename CC00438 robberies_1975
+ 29.         rename CC00439F assaults_1975_f
+ 30.         rename CC00439 assaults_1975
+ 31.         rename CC00440F burglaries_1975_f
+ 32.         rename CC00440 burglaries_1975
+ 33.         rename CC00441F auto_thft_1975_f
+ 34.         rename CC00441 auto_thft_1975
+ 35.         
+.     keep fipstate fipscnty areaname_1970 land_area_1970_f land_area_1970 tot_pop_1970a_f             ///
+>             tot_pop_1970a tot_pop_1970b_f tot_pop_1970b white_pop_1970_f white_pop_1970                  ///
+>             black_pop_pct_1970_f black_pop_pct_1970 hispanic_pop_pct_1970_f hispanic_pop_pct_1970        ///
+>             pop_25_om_1970_f pop_25_om_1970 pop_25_om_hs_pct_1970_f pop_25_om_hs_pct_1970                ///
+>             pop_25_om_coll_pct_1970_f pop_25_om_coll_pct_1970 serious_crimes_1975_f serious_crimes_1975  ///
+>             crime_rate_1975_f crime_rate_1975 robberies_1975_f robberies_1975 assaults_1975_f            ///
+>             assaults_1975 burglaries_1975_f burglaries_1975 auto_thft_1975_f auto_thft_1975          
+ 36.         
+.         foreach x in 1 2 3 6 7{
+ 37.             replace land_area_1970 = . if land_area_1970 == 0 & land_area_1970_f == "`x'"
+ 38.             replace tot_pop_1970a = . if tot_pop_1970a == 0 & tot_pop_1970a_f == "`x'"
+ 39.             replace tot_pop_1970b = . if tot_pop_1970b == 0 & tot_pop_1970b_f == "`x'"
+ 40.             replace white_pop_1970 = . if white_pop_1970 == 0 & white_pop_1970_f == "`x'"
+ 41.             replace black_pop_pct_1970 = . if black_pop_pct_1970 == 0 & black_pop_pct_1970_f == "`x'"
+ 42.             replace hispanic_pop_pct_1970 = . if hispanic_pop_pct_1970 == 0 & hispanic_pop_pct_1970_f == "`x'"
+ 43.             replace pop_25_om_1970 = . if pop_25_om_1970 == 0 & pop_25_om_1970_f == "`x'"
+ 44.             replace pop_25_om_hs_pct_1970 = . if pop_25_om_hs_pct_1970 == 0 & pop_25_om_hs_pct_1970_f == "`x'"
+ 45.             replace pop_25_om_coll_pct_1970 = . if pop_25_om_coll_pct_1970 == 0 & pop_25_om_coll_pct_1970_f == "`x'"
+ 46.             replace serious_crimes_1975 = . if serious_crimes_1975 == 0 & serious_crimes_1975_f == "`x'"
+ 47.             replace crime_rate_1975 = . if crime_rate_1975 == 0 & crime_rate_1975_f == "`x'"
+ 48.         }
+ 49.         
+.     gen black_pop_1970 = black_pop_pct_1970 * tot_pop_1970b / 100
+ 50.     replace black_pop_1970 = round(black_pop_1970)
+ 51.     rename black_pop_pct_1970_f black_pop_1970_f
+ 52.     label var black_pop_1970 "BLACK POPULATION 1970"
+ 53.     label var black_pop_1970_f "BLACK POPULATION 1970 FLAG"
+ 54. 
+.     gen hispanic_pop_1970 = hispanic_pop_pct_1970 * tot_pop_1970b / 100
+ 55.     replace hispanic_pop_1970 = round(hispanic_pop_1970)
+ 56.     rename hispanic_pop_pct_1970_f hispanic_pop_1970_f
+ 57.     label var hispanic_pop_1970 "HISPANIC POPULATION 1970"
+ 58.     label var hispanic_pop_1970_f "HISPANIC POPULATION 1970 FLAG"
+ 59.         
+.     gen pop_25_om_hs_1970 = pop_25_om_hs_pct_1970 * pop_25_om_1970 / 100
+ 60.     replace pop_25_om_hs_1970 = round(pop_25_om_hs_1970)
+ 61.     rename pop_25_om_hs_pct_1970_f pop_25_om_hs_1970_f
+ 62.     label var pop_25_om_hs_1970 "PERSONS 25 YEARS OR MORE /W HI SCHL OM 1970"
+ 63.     label var pop_25_om_hs_1970_f "PERSONS 25 YEARS OR MORE /W HI SCHL OM 1970 FLAG"
+ 64. 
+.     gen pop_25_om_coll_1970 = pop_25_om_coll_pct_1970 * pop_25_om_1970 / 100
+ 65.     replace pop_25_om_coll_1970 = round(pop_25_om_coll_1970)
+ 66.     rename pop_25_om_coll_pct_1970_f pop_25_om_coll_1970_f
+ 67.     label var pop_25_om_coll_1970 "PERSONS 25 YEARS OR MORE /W COLL OM 1970"
+ 68.     label var pop_25_om_coll_1970_f "PERSONS 25 YEARS OR MORE /W COLL OM 1970 FLAG"
+ 69.         
+.         gen density_pop_1970 = tot_pop_1970b / land_area_1970
+ 70.         label var density_pop_1970 "POPULATION DENSITY IN SQ ML IN 1970"
+ 71.         
+.     drop robberies_1975_f robberies_1975 assaults_1975_f assaults_1975 burglaries_1975_f            ///
+>             burglaries_1975 auto_thft_1975_f auto_thft_1975 black_pop_pct_1970 hispanic_pop_pct_1970    ///
+>             pop_25_om_hs_pct_1970 pop_25_om_coll_pct_1970
+ 72. 
+.     save_data "../temp/cleaned_1947_1977.dta", key(fipstate fipscnty) replace
+ 73. end
+
+. 
+. program prepare_data_1980
+  1.     local dict_file "../external/raw_databooks/1983/08256-0001-Setup.dct"
+  2.         local data_file "../external/raw_databooks/1983/08256-0001-Data.txt"
+  3.     infile using `dict_file', using (`data_file') clear
+  4. 
+.         rename GEO8001A id
+  5.     rename GEOG8002 areaname_1980
+  6.         rename LAN8001F land_area_1980_f
+  7.         rename LAN8001 land_area_1980
+  8.     rename POP8001F tot_pop_1980_f
+  9.     rename POP8001 tot_pop_1980
+ 10.     rename POP8009F white_pop_1980_f
+ 11.     rename POP8009 white_pop_1980
+ 12.     rename POPG811F black_pop_1980_f
+ 13.     rename POPG811 black_pop_1980
+ 14.     rename POP8017F hispanic_pop_1980_f
+ 15.     rename POP8017 hispanic_pop_1980
+ 16.     rename POP8022F pop_25_om_1980_f
+ 17.     rename POP8022 pop_25_om_1980
+ 18.     rename EDU8023F pop_25_om_hs_1980_f
+ 19.     rename EDU8023 pop_25_om_hs_1980
+ 20.     rename EDU8007F pop_25_om_coll_1980_f
+ 21.     rename EDU8007 pop_25_om_coll_1980
+ 22.     rename CRI8102F serious_crimes_1981_f
+ 23.     rename CRI8102 serious_crimes_1981
+ 24.     rename CRI8101F crime_rate_1981_f
+ 25.     rename CRI8101 crime_rate_1981
+ 26.         rename CRI8111F property_crimes_1981_f
+ 27.         rename CRI8111 property_crimes_1981
+ 28. 
+.     keep id areaname_1980 land_area_1980_f land_area_1980 tot_pop_1980_f tot_pop_1980                      ///
+>             white_pop_1980_f white_pop_1980 black_pop_1980_f black_pop_1980 hispanic_pop_1980_f                ///
+>             hispanic_pop_1980 pop_25_om_hs_1980_f  pop_25_om_hs_1980 pop_25_om_coll_1980_f                     ///
+>             pop_25_om_coll_1980 pop_25_om_1980_f pop_25_om_1980 serious_crimes_1981_f                          ///
+>             serious_crimes_1981 crime_rate_1981_f crime_rate_1981 property_crimes_1981_f property_crimes_1981 
+ 29.         
+.         foreach x in 3 4 5 6{
+ 30.             replace land_area_1980 = . if land_area_1980 == 0 & land_area_1980_f == `x'
+ 31.             replace tot_pop_1980 = . if tot_pop_1980 == 0 & tot_pop_1980_f == `x'
+ 32.             replace white_pop_1980 = . if white_pop_1980 == 0 & white_pop_1980_f == `x'
+ 33.             replace black_pop_1980 = . if black_pop_1980 == 0 & black_pop_1980_f == `x'
+ 34.             replace hispanic_pop_1980 = . if hispanic_pop_1980 == 0 & hispanic_pop_1980_f == `x'
+ 35.             replace pop_25_om_1980 = . if pop_25_om_1980 == 0 & pop_25_om_1980_f == `x'
+ 36.             replace pop_25_om_hs_1980 = . if pop_25_om_hs_1980 == 0 & pop_25_om_hs_1980_f == `x'
+ 37.             replace pop_25_om_coll_1980 = . if pop_25_om_coll_1980 == 0 & pop_25_om_coll_1980_f == `x'
+ 38.             replace serious_crimes_1981 = . if serious_crimes_1981 == 0 & serious_crimes_1981_f == `x'
+ 39.             replace crime_rate_1981 = . if crime_rate_1981 == 0 & crime_rate_1981_f == `x'
+ 40.     }
+ 41.     
+.         tostring id, replace
+ 42.         replace id = "0000" if id == "0"
+ 43.         replace id = "0" + id if length(id) == 4
+ 44.         gen fipstate = substr(id,1,2)
+ 45.         gen fipscnty = substr(id,3,3)
+ 46.         
+.         gen density_pop_1980 = tot_pop_1980 / land_area_1980
+ 47.         label var density_pop_1980 "POPULATION DENSITY IN SQ ML IN 1980"
+ 48.         
+.         drop id property_crimes_1981_f property_crimes_1981
+ 49. 
+.     save_data "../temp/cleaned_1980.dta", key(fipstate fipscnty) replace
+ 50. end
+
+. 
+. program prepare_data_1990
+  1.     use "../external/raw_databooks/1994/COF01.DTA", clear
+  2. 
+.         rename state fipstate
+  3.         rename county fipscnty
+  4.     rename areaname areaname_1990
+  5.         rename FLAG001 land_area_1990_f
+  6.         rename ITEM001 land_area_1990
+  7.         rename FLAG005 tot_pop_1990_f
+  8.     rename ITEM005 tot_pop_1990
+  9.     label var tot_pop_1990_f "FLAG FOR POPULATION 1990"
+ 10.     label var tot_pop_1990 "POPULATION 1990"
+ 11.         label var land_area_1990_f "FLAG FOR LAND AREA 1990"
+ 12.     label var land_area_1990 "LAND AREA 1990"
+ 13.                 
+.     keep fipstate fipscnty areaname_1990 land_area_1990_f land_area_1990 tot_pop_1990_f tot_pop_1990
+ 14.     save "../temp/cleaned_1990_COF01.dta", replace
+ 15. 
+.     use "../external/raw_databooks/1994/COF02.DTA", clear
+ 16. 
+.     rename state fipstate
+ 17.         rename county fipscnty
+ 18.     rename areaname areaname_1990
+ 19.         rename FLAG009 white_pop_1990_f
+ 20.     rename ITEM009 white_pop_1990
+ 21.     rename FLAG010 black_pop_1990_f
+ 22.     rename ITEM010 black_pop_1990
+ 23.     rename FLAG013 hispanic_pop_1990_f
+ 24.     rename ITEM013 hispanic_pop_1990
+ 25.         label var white_pop_1990_f "FLAG FOR POPULATION BY RACE, WHITE 1990"
+ 26.     label var white_pop_1990 "POPULATION BY RACE, WHITE 1990"
+ 27.     label var black_pop_1990_f "FLAG FOR POPULATION BY RACE, BLACK 1990"
+ 28.     label var black_pop_1990 "POPULATION BY RACE, BLACK 1990"
+ 29.     label var hispanic_pop_1990_f "FLAG FOR HISPANIC ORIGIN POPULATION, TOTAL"
+ 30.     label var hispanic_pop_1990 "HISPANIC ORIGIN POPULATION, TOTAL"
+ 31.     
+.         keep fipstate fipscnty areaname_1990 white_pop_1990_f white_pop_1990     ///
+>             black_pop_1990_f  black_pop_1990 hispanic_pop_1990_f hispanic_pop_1990
+ 32.         save "../temp/cleaned_1990_COF02.dta", replace
+ 33. 
+.     use "../external/raw_databooks/1994/COF06.DTA", clear 
+ 34.     
+.         rename state fipstate
+ 35.         rename county fipscnty
+ 36.     rename areaname areaname_1990
+ 37.         rename FLAG061 serious_crimes_1991_f
+ 38.     rename ITEM061 serious_crimes_1991
+ 39.         rename FLAG062 violent_crimes_1991_f
+ 40.     rename ITEM062 violent_crimes_1991
+ 41.     rename FLAG063 crime_rate_1991_f
+ 42.     rename ITEM063 crime_rate_1991
+ 43.         label var serious_crimes_1991_f "FLAG FOR SERIOUS CRIMES KNOWN TO POLICE 1991"
+ 44.     label var serious_crimes_1991 "SERIOUS CRIMES KNOWN TO POLICE 1991"
+ 45.         label var violent_crimes_1991_f "FLAG FOR SERIOUS CRIMES KNOWN TO POLICE, VIOLENT 1991"
+ 46.         label var violent_crimes_1991 "SERIOUS CRIMES KNOWN TO POLICE, VIOLENT 1991"
+ 47.     label var crime_rate_1991_f "FLAG FOR SERIOUS CRIMES PER 100,000 POPULATION 1991"
+ 48.     label var crime_rate_1991 "SERIOUS CRIMES PER 100,000 POPULATION 1991"
+ 49.         
+.         keep fipstate fipscnty areaname_1990 serious_crimes_1991_f serious_crimes_1991   ///
+>             violent_crimes_1991_f violent_crimes_1991 crime_rate_1991_f crime_rate_1991
+ 50.         save "../temp/cleaned_1990_COF06.dta", replace
+ 51. 
+.     use "../external/raw_databooks/1994/COF07.DTA", clear
+ 52.     
+.     rename state fipstate
+ 53.         rename county fipscnty
+ 54.     rename areaname areaname_1990
+ 55.         rename FLAG069 pop_25_om_1990_f
+ 56.     rename ITEM069 pop_25_om_1990
+ 57.     rename FLAG070 pop_25_om_hs_pct_1990_f
+ 58.     rename ITEM070 pop_25_om_hs_pct_1990
+ 59.     rename FLAG071 pop_25_om_coll_pct_1990_f
+ 60.     rename ITEM071 pop_25_om_coll_pct_1990
+ 61.         label var pop_25_om_1990_f "FLAG FOR PERSONS 25 YEARS AND OVER 1990"
+ 62.     label var pop_25_om_1990 "PERSONS 25 YEARS AND OVER 1990"
+ 63.     label var pop_25_om_hs_pct_1990_f "FLAG FOR PERSONS 25 YEARS AND OVER, PERCENT HIGH SCHOOL GRADUATE OR HIGHER 1990"
+ 64.     label var pop_25_om_hs_pct_1990 "PERSONS 25 YEARS AND OVER, PERCENT HIGH SCHOOL GRADUATE OR HIGHER 1990"
+ 65.     label var pop_25_om_coll_pct_1990_f "FLAG FOR PERSONS 25 YEARS AND OVER, PERCENT WITH BACHELOR'S DEGREE OR HIGHER 1990"
+ 66.     label var pop_25_om_coll_pct_1990 "PERSONS 25 YEARS AND OVER, PERCENT WITH BACHELOR'S DEGREE OR HIGHER 1990"
+ 67.     
+.         keep fipstate fipscnty areaname_1990 pop_25_om_1990_f pop_25_om_1990 pop_25_om_hs_pct_1990_f   ///
+>             pop_25_om_hs_pct_1990 pop_25_om_coll_pct_1990_f pop_25_om_coll_pct_1990
+ 68.         save "../temp/cleaned_1990_COF07.dta", replace
+ 69. 
+.     * Merge of the temp dta just created
+.     use "../temp/cleaned_1990_COF01.dta", replace
+ 70.     foreach x in 2 6 7{
+ 71.         merge 1:1 fipstate fipscnty using "../temp/cleaned_1990_COF0`x'.dta", ///
+>             assert(3) nogen keep(3)
+ 72.     }
+ 73. 
+.     label var areaname_1990 "AREA NAME 1990"
+ 74.         
+.         foreach x in 3 4 5 6{
+ 75.             replace land_area_1990 = . if land_area_1990 == 0 & land_area_1990_f == `x'
+ 76.             replace tot_pop_1990 = . if tot_pop_1990 == 0 & tot_pop_1990_f == `x'
+ 77.             replace white_pop_1990 = . if white_pop_1990 == 0 & white_pop_1990_f == `x'
+ 78.             replace black_pop_1990 = . if black_pop_1990 == 0 & black_pop_1990_f == `x'
+ 79.             replace hispanic_pop_1990 = . if hispanic_pop_1990 == 0 & hispanic_pop_1990_f == `x'
+ 80.             replace pop_25_om_1990 = . if pop_25_om_1990 == 0 & pop_25_om_1990_f == `x'
+ 81.             replace pop_25_om_hs_pct_1990 = . if pop_25_om_hs_pct_1990 == 0 & pop_25_om_hs_pct_1990_f == `x'
+ 82.             replace pop_25_om_coll_pct_1990 = . if pop_25_om_coll_pct_1990 == 0 & pop_25_om_coll_pct_1990_f == `x'
+ 83.             replace serious_crimes_1991 = . if serious_crimes_1991 == 0 & serious_crimes_1991_f == `x'
+ 84.             replace crime_rate_1991 = . if crime_rate_1991 == 0 & crime_rate_1991_f == `x'
+ 85.     }
+ 86.         
+.     gen pop_25_om_hs_1990 = pop_25_om_hs_pct_1990 * pop_25_om_1990 / 100
+ 87.     replace pop_25_om_hs_1990 = round(pop_25_om_hs_1990)
+ 88.     rename pop_25_om_hs_pct_1990_f pop_25_om_hs_1990_f
+ 89.     label var pop_25_om_hs_1990 "PERSONS 25 YEARS OR MORE /W HI SCHL OM 1990"
+ 90.     label var pop_25_om_hs_1990_f "PERSONS 25 YEARS OR MORE /W HI SCHL OM 1990 FLAG"
+ 91. 
+.     gen pop_25_om_coll_1990 = pop_25_om_coll_pct_1990 * pop_25_om_1990 / 100
+ 92.     replace pop_25_om_coll_1990 = round(pop_25_om_coll_1990)
+ 93.     rename pop_25_om_coll_pct_1990_f pop_25_om_coll_1990_f
+ 94.     label var pop_25_om_coll_1990 "PERSONS 25 YEARS OR MORE /W COLL OM 1990"
+ 95.     label var pop_25_om_coll_1990_f "PERSONS 25 YEARS OR MORE /W COLL OM 1990 FLAG"
+ 96. 
+.     gen density_pop_1990 = tot_pop_1990 / land_area_1990
+ 97.         label var density_pop_1990 "POPULATION DENSITY IN SQ ML IN 1990"
+ 98.         
+.         drop violent_crimes_1991_f violent_crimes_1991 pop_25_om_hs_pct_1990 pop_25_om_coll_pct_1990
+ 99. 
+.     save_data "../temp/cleaned_1990.dta", key(fipstate fipscnty) replace
+100. end
+
+. 
+. program prepare_data_2000
+  1.     import delimited "../external/raw_databooks/2000/cc00_tab_B1.csv", clear
+  2.     rename b1geo01 id
+  3.         rename b1geo09 areaname_2000
+  4.         rename b1lnd01 land_area_2000
+  5.     rename b1pop03 tot_pop_2000
+  6.         rename b1pop15 hispanic_pop_2000
+  7.         rename b1pop16 hispanic_pop_pct_2000
+  8.         tostring id, replace
+  9.         replace id = "0000" if id == "0"
+ 10.         replace id = "0" + id if length(id) == 4
+ 11.         
+.         keep id areaname_2000 land_area_2000 tot_pop_2000 hispanic_pop_2000 hispanic_pop_pct_2000       
+ 12.     save "../temp/cleaned_2000_cc00_tab_B1.dta.dta", replace
+ 13. 
+.     import delimited "../external/raw_databooks/2000/cc00_tab_B2.csv", clear
+ 14.     rename b2geo01 id
+ 15.         rename b2geo09 areaname_2000
+ 16.         rename b2pop05 white_pop_2000
+ 17.         rename b2pop06 white_pop_pct_2000
+ 18.         rename b2pop07 black_pop_2000
+ 19.         rename b2pop08 black_pop_pct_2000
+ 20.         tostring id, replace
+ 21.         replace id = "0000" if id == "0"
+ 22.         replace id = "0" + id if length(id) == 4
+ 23. 
+.         keep id areaname_2000 white_pop_2000 white_pop_pct_2000 black_pop_2000 black_pop_pct_2000
+ 24.     save "../temp/cleaned_2000_cc00_tab_B2.dta", replace
+ 25. 
+.     import delimited "../external/raw_databooks/2000/cc00_tab_B6.csv", clear
+ 26.         rename b6geo01 id
+ 27.         rename b6geo09 areaname_2000
+ 28.         rename b6crm01f serious_crimes_1999_f
+ 29.         rename b6crm01 serious_crimes_1999
+ 30.         rename b6crm02f violent_crimes_1999_f
+ 31.         rename b6crm02 violent_crimes_1999
+ 32.         rename b6crm03f property_crimes_1999_f
+ 33.         rename b6crm03 property_crimes_1999
+ 34.         rename b6crm04f serious_crimes_1990_f
+ 35.         rename b6crm04 serious_crimes_1990
+ 36.         rename b6crm06f crime_rate_1999_f
+ 37.         rename b6crm06 crime_rate_1999
+ 38.         tostring id, replace
+ 39.         replace id = "0000" if id == "0"
+ 40.         replace id = "0" + id if length(id) == 4
+ 41.         
+.         keep id areaname_2000 serious_crimes_1999_f serious_crimes_1999 violent_crimes_1999_f       ///
+>         violent_crimes_1999 property_crimes_1999_f property_crimes_1999 serious_crimes_1990_f   ///
+>                 serious_crimes_1990 crime_rate_1999_f crime_rate_1999
+ 42.         save "../temp/cleaned_2000_cc00_tab_B6.dta", replace
+ 43. 
+.     import excel "../external/raw_databooks/2007/cc07_tabB4.xls", cellrange(A9:M3208) clear
+ 44.     rename A areaname_2000
+ 45.         rename D pop_25_om_2000
+ 46.         rename E pop_25_om_hs_pct_2000
+ 47.         rename F pop_25_om_coll_pct_2000
+ 48. 
+.         keep areaname_2000 pop_25_om_2000 pop_25_om_hs_pct_2000 pop_25_om_coll_pct_2000
+ 49.     
+.     replace areaname_2000 = subinstr(areaname_2000," ","",.)
+ 50.     forval x = 1/9{
+ 51.         replace areaname_2000 = subinstr(areaname_2000,"`x'","",.)
+ 52.     }
+ 53.     drop if areaname_2000 == "IndependentCity" | areaname_2000 == "IndependentCities"
+ 54. 
+.     foreach var of varlist pop_25_om_2000 pop_25_om_hs_pct_2000 pop_25_om_coll_pct_2000{
+ 55.         replace `var' = "." if `var' == "(X)" | `var' == "(NA)"
+ 56.     }
+ 57. 
+.         /*
+>         Drop two counties that have been incorporated with others before 2000
+>         (as reported from footnotes in cc07_tabB4.excel)
+>         */
+.     drop if areaname_2000 == "SouthBoston,VA" | areaname_2000 == "YellowstoneNationalPark,MT"
+ 58. 
+.     * For these variables we do not have id for areaname. We drop double observations.
+.     sort areaname_2000 pop_25_om_2000 
+ 59.     drop if areaname_2000 == areaname_2000[_n-1]
+ 60.     save "../temp/cleaned_2000_cc07_tabB4.dta", replace
+ 61. 
+.         import excel "../external/raw_databooks/2007/cc07_tabB1.xls", cellrange(B10:C3209) clear
+ 62.         rename B id
+ 63.         rename C areaname_2000
+ 64.     replace areaname_2000 = subinstr(areaname_2000," ","",.)
+ 65.     forval x = 1/9{
+ 66.         replace areaname_2000 = subinstr(areaname_2000,"`x'","",.)
+ 67.     }
+ 68.     drop if areaname_2000 == "IndependentCity" | areaname_2000 == "IndependentCities"
+ 69.     drop if areaname_2000 == "SouthBoston,VA" | areaname_2000 == "YellowstoneNationalPark,MT"
+ 70.         sort areaname_2000 id
+ 71.         drop if areaname_2000 == areaname_2000[_n-1]
+ 72.         save "../temp/cleaned_2000_cc07_tabB1.dta", replace
+ 73. 
+.         /*
+>         Before merging all dta for 2000 we need to merge by areaname the 2 datasets
+>         from 2007 (referred to 2000 data) in order to associate an id to counties
+>         */
+.         merge 1:1 areaname_2000 using "../temp/cleaned_2000_cc07_tabB4.dta", assert(3) nogen keep(3)
+ 74.         
+.         *Now merge with all other dta for 2000
+.     foreach x in cleaned_2000_cc00_tab_B1.dta cleaned_2000_cc00_tab_B2 cleaned_2000_cc00_tab_B6{
+ 75.                 merge 1:1 id using "../temp/`x'.dta", assert(1 2 3) nogen keep(3)
+ 76.     }
+ 77. 
+.     * Destring variables
+.     foreach var of varlist land_area_2000 pop_25_om_2000 pop_25_om_hs_pct_2000 pop_25_om_coll_pct_2000                           ///
+>                 tot_pop_2000 hispanic_pop_2000 hispanic_pop_pct_2000 white_pop_2000 white_pop_pct_2000 black_pop_2000                ///
+>                     black_pop_pct_2000 serious_crimes_1999 violent_crimes_1999 property_crimes_1999 serious_crimes_1990 crime_rate_1999{
+ 78.         replace `var' = subinstr(`var'," ","",.)
+ 79.         replace `var' = "" if inlist(`var', "(NA)", "(X)", "(\8)", "(\9)")
+ 80.         destring `var', replace
+ 81.     }
+ 82. 
+.     gen fipstate = substr(id,1,2)
+ 83.         gen fipscnty = substr(id,3,3)
+ 84.     gen density_pop_2000 = tot_pop_2000 / land_area_2000
+ 85. 
+.         label var areaname_2000 "AREA NAME 2000"
+ 86.         label var land_area_2000 "LAND AREA 2000"
+ 87.         label var density_pop_2000 "LAND AREA, 2000 (SQUARE MILES)"
+ 88.     label var tot_pop_2000 "POPULATION, 2000 (APRIL 1)"
+ 89.     label var hispanic_pop_2000 "HISPANIC OR LATINO POPULATION, 2000: NUMBER"
+ 90.         label var white_pop_2000 "POPULATION, ONE RACE, WHITE, 2000: NUMBER"
+ 91.     label var black_pop_2000 "POPULATION, ONE RACE, BLACK OR AFRICAN AMERICAN, 2000: NUMBER"
+ 92.         label var serious_crimes_1999 "NUMBER OF SERIOUS CRIMES KNOWN TO POLICE, 1999: TOTAL"
+ 93.     label var serious_crimes_1999_f "FLAG FOR NUMBER OF SERIOUS CRIMES KNOWN TO POLICE, 1999: TOTAL"
+ 94.     label var violent_crimes_1999 "NUMBER OF SERIOUS CRIMES KNOWN TO POLICE, 1999: VIOLENT"
+ 95.         label var violent_crimes_1999_f "FLAG FOR NUMBER OF SERIOUS CRIMES KNOWN TO POLICE, 1999: VIOLENT"
+ 96.     label var property_crimes_1999 "NUMBER OF SERIOUS CRIMES KNOWN TO POLICE, 1999: PROPERTY"
+ 97.         label var property_crimes_1999_f "FLAG FOR NUMBER OF SERIOUS CRIMES KNOWN TO POLICE, 1999: PROPERTY"
+ 98.     label var serious_crimes_1990 "NUMBER OF SERIOUS CRIMES KNOWN TO POLICE: 1990"
+ 99.         label var serious_crimes_1990_f "FLAG FOR NUMBER OF SERIOUS CRIMES KNOWN TO POLICE: 1990"
+100.     label var crime_rate_1999 "CRIME RATE (FBI): 1999"
+101.         label var crime_rate_1999_f "FLAG FOR CRIME RATE (FBI): 1999"
+102.     label var pop_25_om_2000 "PERSONS 25 YEARS AND OVER 2000"
+103.         
+.     gen pop_25_om_hs_2000 = pop_25_om_hs_pct_2000 * pop_25_om_2000 / 100
+104.     replace pop_25_om_hs_2000 = round(pop_25_om_hs_2000)
+105.     label var pop_25_om_hs_2000 "PERSONS 25 YEARS OR MORE /W HI SCHL OM 2000"
+106.         
+.     gen pop_25_om_coll_2000 = pop_25_om_coll_pct_2000 * pop_25_om_2000 / 100
+107.     replace pop_25_om_coll_2000 = round(pop_25_om_coll_2000)
+108.     label var pop_25_om_coll_2000 "PERSONS 25 YEARS OR MORE /W COLL OM 2000"
+109.         
+.     drop id hispanic_pop_pct_2000 white_pop_pct_2000 black_pop_pct_2000 serious_crimes_1990 serious_crimes_1990_f   ///
+>             violent_crimes_1999 violent_crimes_1999_f property_crimes_1999 property_crimes_1999_f pop_25_om_hs_pct_2000     ///
+>         pop_25_om_coll_pct_2000
+110.         
+.     save_data "../temp/cleaned_2000.dta", key(fipstate fipscnty) replace
+111. end
+
+. 
+. program merge_files
+  1.     use "../temp/cleaned_1947_1977.dta", clear
+  2.     foreach x in cleaned_1980 cleaned_1990 cleaned_2000{
+  3.         merge 1:1 fipstate fipscnty using "../temp/`x'.dta", assert(1 2 3) nogen keep(3)
+  4.     }
+  5. 
+.     drop if fipscnty == "000"
+  6.         drop *_f
+  7.         
+.     save_data "../output/county_panel.dta", key(fipstate fipscnty) replace
+  8. end
+
+. 
+. * EXECUTE
+. main
+(County and City Data Book [United States] Consolidated File: County Data, 1947-1)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(285 real changes made, 285 to missing)
+(284 real changes made, 284 to missing)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(44 real changes made, 44 to missing)
+(44 real changes made, 44 to missing)
+(42 real changes made, 42 to missing)
+(44 real changes made, 44 to missing)
+(42 real changes made, 42 to missing)
+(44 real changes made, 44 to missing)
+(44 real changes made, 44 to missing)
+(44 real changes made, 44 to missing)
+(44 real changes made, 44 to missing)
+(42 real changes made, 42 to missing)
+(42 real changes made, 42 to missing)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(2,312 real changes made, 2,312 to missing)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(42 missing values generated)
+(2,570 real changes made)
+(2,357 missing values generated)
+(874 real changes made)
+(44 missing values generated)
+(3,151 real changes made)
+(44 missing values generated)
+(3,172 real changes made)
+(46 missing values generated)
+(data now sorted by fipstate fipscnty)
+  variable land_area_1970 was double now long
+  variable areaname_1970 was str30 now str27
+  (22,652 bytes saved)
+==================================================================================================
+File: ../temp/cleaned_1947_1977.dta
+Key: fipstate fipscnty
+==================================================================================================
+  3236:26(83715):2069305909:978836950
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    fipstate |          0
+    fipscnty |          0
+areanam~1970 |          0
+land_area_~f |          0
+land_ar~1970 |      3,192    2216.125    13995.39          2     566432
+-------------+---------------------------------------------------------
+tot_pop_~a_f |          0
+tot_po~1970a |      3,192    127326.4    764555.2         66   2.00e+07
+tot_pop_~b_f |          0
+tot_po~1970b |      3,194    127304.2    764674.4         64   2.00e+07
+white_pop_~f |          0
+-------------+---------------------------------------------------------
+white_p~1970 |      3,192      111596    671860.4         52   1.79e+07
+black_pop_~f |          0
+hispanic_p~f |          0
+pop~m_1970_f |          0
+pop_2~m_1970 |      3,192    68859.25    419621.9         26   1.09e+07
+-------------+---------------------------------------------------------
+pop~s_1970_f |          0
+pop~l_1970_f |          0
+serious_cr~f |          0
+serious~1975 |      2,909    7580.433    50294.39          0    1526293
+crime_rate~f |          0
+-------------+---------------------------------------------------------
+crime_r~1975 |      2,910    2642.992    2279.112          0      40687
+black_p~1970 |      3,194    14138.77     94624.3          0    2170726
+hispani~1970 |        879    20945.79    141498.4        385    3095516
+pop_2~s_1970 |      3,192    36044.75    228689.4          8    6808366
+pop_2~l_1970 |      3,192    7339.968    47983.31          0    1457382
+-------------+---------------------------------------------------------
+density~1970 |      3,190    230.7216    1779.086   .0152361   66923.17
+
+
+
+
+(note: file ../temp/cleaned_1947_1977.dta not found)
+file ../temp/cleaned_1947_1977.dta saved
+
+dictionary {
+
+*****************************************************************
+* STATA DICTIONARY FOR ICPSR 08256
+* COUNTY AND CITY DATA BOOK [UNITED STATES], 1983
+* (DATASET 0001: COUNTIES FILE)
+*
+* Warning: Edit this file at your own risk
+*
+*****************************************************************
+
+_lines(2)
+
+_line(1)
+
+_column(1)     long  GEO8001A           %5f    "FIPS STATE/COUNTY CODE"
+_column(6)     int   GEOG8301           %4f    "MSA CODE"
+_column(10)    int   GEOG8302           %2f    "CMSA CODE"
+_column(12)    int   GEOG8303           %4f    "PMSA CODE"
+_column(16)    int   GEOG8101           %4f    "SMSA CODE"
+_column(20)    str36 GEOG8002           %36s   "AREA NAME"
+_column(56)    int   LAN8001F :LAN8001F %1f    "LAND AREA IN SQUARE MILES 1980 FLAG"
+_column(57)    double LAN8001            %10f   "LAND AREA IN SQUARE MILES 1980"
+_column(67)    int   POP7001F :POP7001F %1f    "POPULATION (APRIL 1) 1970 FLAG"
+_column(68)    double POP7001            %10f   "POPULATION (APRIL 1) 1970"
+_column(78)    int   POP8001F :POP8001F %1f    "POPULATION (APRIL 1) 1980 FLAG"
+_column(79)    double POP8001            %10f   "POPULATION (APRIL 1) 1980"
+_column(89)    int   POP8002F :POP8002F %1f    "RANK OF COUNTY POPULATION 1980 FLAG"
+_column(90)    double POP8002            %10f   "RANK OF COUNTY POPULATION 1980"
+_column(100)   int   POP8003F :POP8003F %1f    "POPULATION PER SQUARE MILE 1980 FLAG"
+_column(101)   double POP8003            %10.1f "POPULATION PER SQUARE MILE 1980"
+_column(111)   int   POP8005F :POP8005F %1f    "URBAN POPULATION 1980 FLAG"
+_column(112)   double POP8005            %10f   "URBAN POPULATION 1980"
+_column(122)   int   POP8009F :POP8009F %1f    "WHITE POPULATION 1980 FLAG"
+_column(123)   double POP8009            %10f   "WHITE POPULATION 1980"
+_column(133)   int   POPG811F :POPG811F %1f    "BLACK POPULATION 1980 FLAG"
+_column(134)   double POPG811            %10f   "BLACK POPULATION 1980"
+_column(144)   int   POP8013F :POP8013F %1f    "AMER. INDIANS/ESKIMOS/ALEUTS 1980 FLAG"
+_column(145)   double POP8013            %10f   "AMER. INDIANS/ESKIMOS/ALEUTS 1980"
+_column(155)   int   POP8014F :POP8014F %1f    "ASIAN AND PACIFIC ISLANDERS 1980 FLAG"
+_column(156)   double POP8014            %10f   "ASIAN AND PACIFIC ISLANDERS 1980"
+_column(166)   int   POP8017F :POP8017F %1f    "SPANISH-ORIGIN POPULATION 1980 FLAG"
+_column(167)   double POP8017            %10f   "SPANISH-ORIGIN POPULATION 1980"
+_column(177)   int   POP8040F :POP8040F %1f    "FEMALE POPULATION 1980 FLAG"
+_column(178)   double POP8040            %10f   "FEMALE POPULATION 1980"
+_column(188)   int   POPS811F :POPS811F %1f    "PERSONS 5 YRS OLD AND OVER 1980 FLAG"
+_column(189)   double POPS811            %10f   "PERSONS 5 YRS OLD AND OVER 1980"
+_column(199)   int   POP8055F :POP8055F %1f    "PRSNS RES 75/DIFF H SAME CNTY 80 FLAG"
+_column(200)   double POP8055            %10f   "PRSNS RES 75/DIFF H SAME CNTY 80"
+_column(210)   int   POP8056F :POP8056F %1f    "PRSNS RES 75/DIFF CNTY/SME STATE 80 FLAG"
+_column(211)   double POP8056            %10f   "PRSNS RES 75/DIFF CNTY SME STATE 80"
+_column(221)   int   POP8062F :POP8062F %1f    "PRSNS RES 75/DIFF STATE/ABRD 1980 FLAG"
+_column(222)   double POP8062            %10f   "PRSNS RES 75/DIFF STATE/ABRD 1980"
+_column(232)   int   POP8053F :POP8053F %1f    "PERSONS BORN IN STATE OF RES 1980 FLAG"
+_column(233)   double POP8053            %10f   "PERSONS BORN IN STATE OF RES 1980"
+_column(243)   int   POP8084F :POP8084F %1f    "PERSONS IN GROUP QUARTERS 1980 FLAG"
+_column(244)   double POP8084            %10f   "PERSONS IN GROUP QUARTERS 1980"
+_column(254)   int   POP8019F :POP8019F %1f    "PERSONS UNDER 5 YRS OLD 1980 FLAG"
+_column(255)   double POP8019            %10f   "PERSONS UNDER 5 YRS OLD 1980"
+_column(265)   int   POP8020F :POP8020F %1f    "PERSONS 5-17 YRS OLD 1980 FLAG"
+_column(266)   double POP8020            %10f   "PERSONS 5-17 YRS OLD 1980"
+_column(276)   int   POP8039F :POP8039F %1f    "PERSONS 65 YRS OLD AND OVER 1980 FLAG"
+_column(277)   double POP8039            %10f   "PERSONS 65 YRS OLD AND OVER 1980"
+_column(287)   int   POP8024F :POP8024F %1f    "PERSONS 18 YRS OLD AND OVER 1980 FLAG"
+_column(288)   double POP8024            %10f   "PERSONS 18 YRS OLD AND OVER 1980"
+_column(298)   int   POP8018F :POP8018F %1f    "MEDIAN AGE 1980 FLAG"
+_column(299)   double POP8018            %10.1f "MEDIAN AGE 1980"
+_column(309)   int   HHL8001F :HHL8001F %1f    "HOUSEHOLDS 1980 FLAG"
+_column(310)   double HHL8001            %10f   "HOUSEHOLDS 1980"
+_column(320)   int   HHL8021F :HHL8021F %1f    "PERSONS PER HOUSEHOLD 1980 FLAG"
+_column(321)   double HHL8021            %10.2f "PERSONS PER HOUSEHOLD 1980"
+_column(331)   int   HHL8004F :HHL8004F %1f    "FAMILIES 1980 FLAG"
+_column(332)   double HHL8004            %10f   "FAMILIES 1980"
+_column(342)   int   HHL8007F :HHL8007F %1f    "MARRIED-COUPLE FAMILIES 1980 FLAG"
+_column(343)   double HHL8007            %10f   "MARRIED-COUPLE FAMILIES 1980"
+_column(353)   int   HHL8010F :HHL8010F %1f    "FAMILIES W/ FEMALE HOUSEHOLDER 1980 FLAG"
+_column(354)   double HHL8010            %10f   "FAMILIES W/ FEMALE HOUSEHOLDER 1980"
+_column(364)   int   HHL8015F :HHL8015F %1f    "ONE-PERSON HOUSEHOLDS 1980 FLAG"
+_column(365)   double HHL8015            %10f   "ONE-PERSON HOUSEHOLDS 1980"
+_column(375)   int   VIS8001F :VIS8001F %1f    "BIRTHS 1980 FLAG"
+_column(376)   double VIS8001            %10f   "BIRTHS 1980"
+_column(386)   int   VIS8002F :VIS8002F %1f    "BIRTHS TO MOTHER UNDER 20 1980 FLAG"
+_column(387)   double VIS8002            %10f   "BIRTHS TO MOTHER UNDER 20 1980"
+_column(397)   int   VIS8005F :VIS8005F %1f    "BIRTHS PER 1000 POPULATION 1980 FLAG"
+_column(398)   double VIS8005            %10.1f "BIRTHS PER 1000 POPULATION 1980"
+_column(408)   int   VIS8006F :VIS8006F %1f    "DEATHS 1980 FLAG"
+_column(409)   double VIS8006            %10f   "DEATHS 1980"
+_column(419)   int   VIS8008F :VIS8008F %1f    "DEATHS PER 1000 POPULATION 1980 FLAG"
+_column(420)   double VIS8008            %10.1f "DEATHS PER 1000 POPULATION 1980"
+_column(430)   int   VIS8010F :VIS8010F %1f    "MARRIAGES 1980 FLAG"
+_column(431)   double VIS8010            %10f   "MARRIAGES 1980"
+_column(441)   int   VIS8011F :VIS8011F %1f    "MARRIAGES PER 1000 POPULATION 1980 FLAG"
+_column(442)   double VIS8011            %10.1f "MARRIAGES PER 1000 POPULATION 1980"
+_column(452)   int   VIS8012F :VIS8012F %1f    "DIVORCES 1980 FLAG"
+_column(453)   double VIS8012            %10f   "DIVORCES 1980"
+_column(463)   int   VIS8013F :VIS8013F %1f    "DIVORCES PER 1000 POPULATION 1980 FLAG"
+_column(464)   double VIS8013            %10.1f "DIVORCES PER 1000 POPULATION 1980"
+_column(474)   int   HLT8001F :HLT8001F %1f    "PHYSICIANS (ACTIVE NON-FED) 1980 FLAG"
+_column(475)   double HLT8001            %10f   "PHYSICIANS (ACTIVE NON-FED) 1980"
+_column(485)   int   HLT8004F :HLT8004F %1f    "PHYSICIANS PER 100,000 POP 1980 FLAG"
+_column(486)   double HLT8004            %10.1f "PHYSICIANS PER 100,000 POP 1980"
+_column(496)   int   HLT8007F :HLT8007F %1f    "HOSPITALS 1980 FLAG"
+_column(497)   double HLT8007            %10f   "HOSPITALS 1980"
+_column(507)   int   HLT8009F :HLT8009F %1f    "HOSPITAL BEDS 1980 FLAG"
+_column(508)   double HLT8009            %10f   "HOSPITAL BEDS 1980"
+_column(518)   int   HLT8011F :HLT8011F %1f    "HOSPITAL BEDS PER 100,000 POP 1980 FLAG"
+_column(519)   double HLT8011            %10.1f "HOSPITAL BEDS PER 100,000 POP 1980"
+_column(529)   int   HLT8023F :HLT8023F %1f    "NURSING HOMES 1980 FLAG"
+_column(530)   double HLT8023            %10f   "NURSING HOMES 1980"
+_column(540)   int   HLT8022F :HLT8022F %1f    "NURSING HOMES- BEDS 1980 FLAG"
+_column(541)   double HLT8022            %10f   "NURSING HOMES- BEDS 1980"
+_column(551)   int   HLT8021F :HLT8021F %1f    "NURSING HOMES- RESIDENTS 1980 FLAG"
+_column(552)   double HLT8021            %10f   "NURSING HOMES- RESIDENTS 1980"
+_column(562)   int   HLT7905F :HLT7905F %1f    "DENTISTS (ACTIVE) 1979 FLAG"
+_column(563)   double HLT7905            %10f   "DENTISTS (ACTIVE) 1979"
+_column(573)   int   HLT7706F :HLT7706F %1f    "NURSES (ACTIVE REGISTERED) 1977 FLAG"
+_column(574)   double HLT7706            %10f   "NURSES (ACTIVE REGISTERED) 1977"
+_column(584)   int   HLT8031F :HLT8031F %1f    "HOSPITAL INSURANCE- ENROLLMENT 1980 FLAG"
+_column(585)   double HLT8031            %10f   "HOSPITAL INSURANCE- ENROLLMENT 1980"
+_column(595)   int   HLT8032F :HLT8032F %1f    "MEDICAL INSURANCE- ENROLLMENT 1980 FLAG"
+_column(596)   double HLT8032            %10f   "MEDICAL INSURANCE- ENROLLMENT 1980"
+_column(606)   int   HLT8033F :HLT8033F %1f    "HOSP BENEFIT PAYMENTS FOR YEAR 1980 FLAG"
+_column(607)   double HLT8033            %10f   "HOSP BENEFIT PAYMENTS FOR YEAR 1980"
+_column(617)   int   HLT8034F :HLT8034F %1f    "MED BENEFIT PAYMENTS FOR YEAR 1980 FLAG"
+_column(618)   double HLT8034            %10f   "MED BENEFIT PAYMENTS FOR YEAR 1980"
+_column(628)   int   SOC8001F :SOC8001F %1f    "SOC SEC BEN RECIPIENTS TOTAL 1980 FLAG"
+_column(629)   double SOC8001            %10f   "SOC SEC BEN RECIPIENTS TOTAL 1980"
+_column(639)   int   SOC8002F :SOC8002F %1f    "SOC SEC BEN RCPNTS RETIREES 1980 FLAG"
+_column(640)   double SOC8002            %10f   "SOC SEC BEN RCPNTS RETIREES 1980"
+_column(650)   int   SOC8005F :SOC8005F %1f    "SOC SEC BENEFIT PAYMENTS FOR 1980 FLAG"
+_column(651)   double SOC8005            %10f   "SOC SEC BENEFIT PAYMENTS FOR 1980"
+_column(661)   int   SOC8007F :SOC8007F %1f    "SOC SEC MNTHLY PYMNTS-RETIREES 80 FLAG"
+_column(662)   double SOC8007            %10f   "SOC SEC MNTHLY PYMNTS-RETIREES 80"
+_column(672)   int   SSI8201F :SSI8201F %1f    "SUPPLEMENTAL SCRTY INCOME REC 1982 FLAG"
+_column(673)   double SSI8201            %10f   "SUPPLEMENTAL SCRTY INCOME REC 1982"
+_column(683)   int   SSI8203F :SSI8203F %1f    "SPLMNTL SCRTY PYMNTS MNTH (JUNE)82 FLAG"
+_column(684)   double SSI8203            %10f   "SPLMNTL SCRTY PYMNTS MNTH (JUNE)82"
+_column(694)   int   HOU8170F :HOU8170F %1f    "NEW PRIV. HOUSING UNITS TOTAL 1981 FLAG"
+_column(695)   double HOU8170            %10f   "NEW PRIV. HOUSING UNITS TOTAL 1981"
+_column(705)   int   HOU8171F :HOU8171F %1f    "NEW PRIV. HOUSING- ONE-UNIT 1981 FLAG"
+_column(706)   double HOU8171            %10f   "NEW PRIV. HOUSING- ONE-UNIT 1981"
+_column(716)   int   HOU8172F :HOU8172F %1f    "NEW PRIV. HOUS- FIVE OR MORE 1981 FLAG"
+_column(717)   double HOU8172            %10f   "NEW PRIV. HOUS- FIVE OR MORE 1981"
+_column(727)   int   HOU8173F :HOU8173F %1f    "VALUATION OF HOUSING UNITS 1981 FLAG"
+_column(728)   double HOU8173            %10f   "VALUATION OF HOUSING UNITS 1981"
+_column(738)   int   HOU8001F :HOU8001F %1f    "HOUSING UNITS 1980 FLAG"
+_column(739)   double HOU8001            %10f   "HOUSING UNITS 1980"
+_column(749)   int   HOU7001F :HOU7001F %1f    "HOUSING UNITS 1970 FLAG"
+_column(750)   double HOU7001            %10f   "HOUSING UNITS 1970"
+_column(760)   int   HOU8003F :HOU8003F %1f    "YEAR-ROUND HOUSING UNITS 1980 FLAG"
+_column(761)   double HOU8003            %10f   "YEAR-ROUND HOUSING UNITS 1980"
+_column(771)   int   HOU8002F :HOU8002F %1f    "VACANT YEAR-ROUND HOUSING 1980 FLAG"
+_column(772)   double HOU8002            %10f   "VACANT YEAR-ROUND HOUSING 1980"
+_column(782)   int   HOU8094F :HOU8094F %1f    "YEAR-RND HOUSING UNITS(SAMPLE) 1980 FLAG"
+_column(783)   double HOU8094            %10f   "YEAR-RND HOUSING UNITS(SAMPLE) 1980"
+_column(793)   int   HOU8011F :HOU8011F %1f    "YEAR-RND WITH 1 UNIT STRUCTURE 1980 FLAG"
+_column(794)   double HOU8011            %10f   "YEAR-RND WITH 1 UNIT STRUCTURE 1980"
+_column(804)   int   HOU8012F :HOU8012F %1f    "YEAR-RND WITH 5 OR MORE UNITS 1980 FLAG"
+_column(805)   double HOU8012            %10f   "YEAR-RND WITH 5 OR MORE UNITS 1980"
+_column(815)   int   HOU8080F :HOU8080F %1f    "YEAR-RND W/AIR CONDITIONING 1980 FLAG"
+_column(816)   double HOU8080            %10f   "YEAR-RND W/AIR CONDITIONING 1980"
+_column(826)   int   HOU8010F :HOU8010F %1f    "YEAR-RND BLT BTWN 1979 AND MAR 1980 FLAG"
+_column(827)   double HOU8010            %10f   "YEAR-RND BLT BTWN 1979 AND MAR 1980"
+_column(837)   int   HOU8009F :HOU8009F %1f    "YEAR-RND BLT BTWN 1975 AND 1978 FLAG"
+_column(838)   double HOU8009            %10f   "YEAR-RND BLT BTWN 1975 AND 1978"
+_column(848)   int   HOU8008F :HOU8008F %1f    "YEAR-RND BLT BTWN 1970 AND 1974 FLAG"
+_column(849)   double HOU8008            %10f   "YEAR-RND BLT BTWN 1970 AND 1974"
+_column(859)   int   HOU8007F :HOU8007F %1f    "YEAR-RND BLT BTWN 1960 AND 1969 FLAG"
+_column(860)   double HOU8007            %10f   "YEAR-RND BLT BTWN 1960 AND 1969"
+_column(870)   int   HOU8006F :HOU8006F %1f    "YEAR-RND BUILT 1939 OR EARLIER FLAG"
+_column(871)   double HOU8006            %10f   "YEAR-RND BUILT 1939 OR EARLIER"
+_column(881)   int   HOU8015F :HOU8015F %1f    "OCCUPIED HOUSING UNITS 1980 FLAG"
+_column(882)   double HOU8015            %10f   "OCCUPIED HOUSING UNITS 1980"
+_column(892)   int   HOU8030F :HOU8030F %1f    "OWNER-OCCUPIED UNITS 1980 FLAG"
+_column(893)   double HOU8030            %10f   "OWNER-OCCUPIED UNITS 1980"
+_column(903)   int   HOU8046F :HOU8046F %1f    "OWNER COSTS WITH MORTGAGE 1980 FLAG"
+_column(904)   double HOU8046            %10f   "OWNER COSTS WITH MORTGAGE 1980"
+_column(914)   int   HOU8032F :HOU8032F %1f    "VAL OWN 0CC NONCNDO HSNG UNTS 1980 FLAG"
+_column(915)   double HOU8032            %10f   "VAL OWN OCC NONCNDO HSNG UNTS 1980"
+_column(925)   int   HOU8047F :HOU8047F %1f    "RENTER-OCCUPIED HOUSING UNITS 1980 FLAG"
+_column(926)   double HOU8047            %10f   "RENTER-OCCUPIED HOUSING UNITS 1980"
+_column(936)   int   HOU8062F :HOU8062F %1f    "MEDIAN GROSS RENT- PAYING CASH 1980 FLAG"
+_column(937)   double HOU8062            %10f   "MEDIAN GROSS RENT- PAYING CASH 1980"
+_column(947)   int   HOU8019F :HOU8019F %1f    "UNITS W/O COMPLETE PLUMBING 1980 FLAG"
+_column(948)   double HOU8019            %10f   "UNITS W/O COMPLETE PLUMBING 1980"
+_column(958)   int   HOU8017F :HOU8017F %1f    "UNITS WITH 1.01 OR MORE/ROOM 1980 FLAG"
+_column(959)   double HOU8017            %10f   "UNITS WITH 1.01 OR MORE/ROOM 1980"
+_column(969)   int   HOU8095F :HOU8095F %1f    "OCCPD HOUSING UNITS 1980 (SAMPLE) FLAG"
+_column(970)   double HOU8095            %10f   "OCCPD HOUSING UNITS 1980 (SAMPLE)"
+_column(980)   int   HOU8069F :HOU8069F %1f    "UNITS W/HEATING (GAS) 1980 FLAG"
+_column(981)   double HOU8069            %10f   "UNITS W/HEATING (GAS) 1980"
+_column(991)   int   HOU8066F :HOU8066F %1f    "UNITS W/ HEATING (ELEC) 1980 FLAG"
+_column(992)   double HOU8066            %10f   "UNITS W/ HEATING (ELEC) 1980"
+_column(1002)  int   HOU8067F :HOU8067F %1f    "UNITS W/ HEATING (FUEL OIL, ETC)80 FLAG"
+_column(1003)  double HOU8067            %10f   "UNITS W/ HEATING (FUEL OIL, ETC)80"
+_column(1013)  int   LAB8085F :LAB8085F %1f    "WRKRS RPRTNG WORK COUNTY/STATE 1980 FLAG"
+_column(1014)  double LAB8085            %10f   "WRKRS RPRTNG WORK COUNTY/STATE 1980"
+_column(1024)  int   LAB8032F :LAB8032F %1f    "WORKED OUTSIDE COUNTY OF RED 1980 FLAG"
+_column(1025)  double LAB8032            %10f   "WORKED OUTSIDE COUNTY OF RED 1980"
+_column(1035)  int   LAB8080F :LAB8080F %1f    "RPRTNG MEANS OF WORK TRANSPORT 1980 FLAG"
+_column(1036)  double LAB8080            %10f   "RPRTNG MEANS OF WORK TRANSPORT 1980"
+_column(1046)  int   LAB8029F :LAB8029F %1f    "WORKERS DRIVING ALONE TO WORK 1980 FLAG"
+_column(1047)  double LAB8029            %10f   "WORKERS DRIVING ALONE TO WORK 1980"
+_column(1057)  int   LAB8030F :LAB8030F %1f    "WORKERS CARPOOLING TO WORK 1980 FLAG"
+_column(1058)  double LAB8030            %10f   "WORKERS CARPOOLING TO WORK 1980"
+_column(1068)  int   LAB8028F :LAB8028F %1f    "WRKRS USING PUB TRANS TO WORK 1980 FLAG"
+_column(1069)  double LAB8028            %10f   "WRKRS USING PUB TRANS TO WORK 1980"
+_column(1079)  int   CRI8102F :CRI8102F %1f    "CRIMES- NO. OF OFFENSES 1981 FLAG"
+_column(1080)  double CRI8102            %10f   "CRIMES- NO. OF OFFENSES 1981"
+_column(1090)  int   CRI8101F :CRI8101F %1f    "CRIMES PER 100,000 POPULATION 1981 FLAG"
+_column(1091)  double CRI8101            %10f   "CRIMES PER 100,000 POPULATION 1981"
+_column(1101)  int   CRI8111F :CRI8111F %1f    "PROPERTY CRIMES KNOWN 1981 FLAG"
+_column(1102)  double CRI8111            %10f   "PROPERTY CRIMES KNOWN 1981"
+_column(1112)  int   POP8022F :POP8022F %1f    "ED ATTAINMENT- 25 AND OVER 1980 FLAG"
+_column(1113)  double POP8022            %10f   "ED ATTAINMENT- 25 AND OVER 1980"
+_column(1123)  int   EDU8023F :EDU8023F %1f    "ED ATTNMNT- 25 AND OVER H.S. 1980 FLAG"
+_column(1124)  double EDU8023            %10f   "ED ATTNMNT- 25 AND OVER H.S. 1980"
+_column(1134)  int   EDU8007F :EDU8007F %1f    "ED ATTNMNT- 25 AND OVER COL 1980 FLAG"
+_column(1135)  double EDU8007            %10f   "ED ATTNMNT- 25 AND OVER COL 1980"
+_column(1145)  int   EDU8009F :EDU8009F %1f    "SCHOOL ENRLLMNT- TOTAL 1980 FLAG"
+_column(1146)  double EDU8009            %10f   "SCHOOL ENRLLMNT- TOTAL 1980"
+_column(1156)  int   EDU8011F :EDU8011F %1f    "SCHOOL ENRLLMNT- KDG/ELEM 1980 FLAG"
+_column(1157)  double EDU8011            %10f   "SCHOOL ENRLLMNT- KDG/ELEM 1980"
+_column(1167)  int   EDU8013F :EDU8013F %1f    "SCHOOL ENRLLMNT- HIGH SCHOOL 1980 FLAG"
+_column(1168)  double EDU8013            %10f   "SCHOOL ENRLLMNT- HIGH SCHOOL 1980"
+_column(1178)  int   EDU8012F :EDU8012F %1f    "SCHOOL ENRLLMNT- PRIV KDG/ELEM 1980 FLAG"
+_column(1179)  double EDU8012            %10f   "SCHOOL ENRLLMNT- PRIV KDG/ELEM 1980"
+_column(1189)  int   EDU8014F :EDU8014F %1f    "SCHOOL ENRLLMNT- PRIV HS 1980 FLAG"
+_column(1190)  double EDU8014            %10f   "SCHOOL ENRLLMNT- PRIV HS 1980"
+_column(1200)  int   EDU8015F :EDU8015F %1f    "SCHOOL ENRLLMNT- COLLEGE 1980 FLAG"
+_column(1201)  double EDU8015            %10f   "SCHOOL ENRLLMNT- COLLEGE 1980"
+_column(1211)  int   LAB8243F :LAB8243F %1f    "CIVILIAN LABOR FORCE (BLS) 1982 FLAG"
+_column(1212)  double LAB8243            %10f   "CIVILIAN LABOR FORCE (BLS) 1982"
+_column(1222)  int   LAB8244F :LAB8244F %1f    "UNEMPLOYED PERSONS (BLS) 1982 FLAG"
+_column(1223)  double LAB8244            %10f   "UNEMPLOYED PERSONS (BLS) 1982"
+_column(1233)  int   LAB8002F :LAB8002F %1f    "TOTAL LABOR FORCE 1980 FLAG"
+_column(1234)  double LAB8002            %10f   "TOTAL LABOR FORCE 1980"
+_column(1244)  int   LAB8005F :LAB8005F %1f    "CIVILIAN LABOR FORCE 1980 FLAG"
+_column(1245)  double LAB8005            %10f   "CIVILIAN LABOR FORCE 1980"
+_column(1255)  int   LAB8004F :LAB8004F %1f    "CIVILIAN LABOR FORCE- FEMALES 1980 FLAG"
+_column(1256)  double LAB8004            %10f   "CIVILIAN LABOR FORCE- FEMALES 1980"
+_column(1266)  int   LAB8007F :LAB8007F %1f    "UNEMPLOYED PERSONS 1980 FLAG"
+_column(1267)  double LAB8007            %10f   "UNEMPLOYED PERSONS 1980"
+
+_line(2)
+
+_column(1)     long  GEO8001B           %5f    "FIPS STATE/COUNTY CODE"
+_column(6)     long  FILLER01           %6f    "FILLER"
+_column(12)    int   LAB8009F :LAB8009F %1f    "EMPLYD PRSNS (CIV LABOR FORCE) 1980 FLAG"
+_column(13)    double LAB8009            %10f   "EMPLYD PRSNS (CIV LABOR FORCE) 1980"
+_column(23)    int   LAB8013F :LAB8013F %1f    "EMPLOYED IN MANUFACTURING 1980 FLAG"
+_column(24)    double LAB8013            %10f   "EMPLOYED IN MANUFACTURING 1980"
+_column(34)    int   LAB8015F :LAB8015F %1f    "EMPLOYED IN TRADE 1980 FLAG"
+_column(35)    double LAB8015            %10f   "EMPLOYED IN TRADE 1980"
+_column(45)    int   LAB8056F :LAB8056F %1f    "EMPLOYED PROF. SERVICES 1980 FLAG"
+_column(46)    double LAB8056            %10f   "EMPLOYED PROF. SERVICES 1980"
+_column(56)    int   LAB8098F :LAB8098F %1f    "OTHER SIG. INDUSTRY CODE 1980 FLAG"
+_column(57)    double LAB8098  :LAB8098  %10f   "OTHER SIG. INDUSTRY CODE 1980"
+_column(67)    int   LAB8099F :LAB8099F %1f    "OTHER SIG. INDUSTRY PERCENT 1980 FLAG"
+_column(68)    double LAB8099            %10.1f "OTHER SIG. INDUSTRY PERCENT 1980"
+_column(78)    int   LAB8034F :LAB8034F %1f    "EMPLOYMENT/RESIDENCE RATIO 1980 FLAG"
+_column(79)    double LAB8034            %10.3f "EMPLOYMENT/RESIDENCE RATIO 1980"
+_column(89)    int   LAB8055F :LAB8055F %1f    "EMPLOYED IN GOVERNMENT 1980 FLAG"
+_column(90)    double LAB8055            %10f   "EMPLOYED IN GOVERNMENT 1980"
+_column(100)   int   LAB8027F :LAB8027F %1f    "SELF-EMPLOYED WORKERS 1980 FLAG"
+_column(101)   double LAB8027            %10f   "SELF-EMPLOYED WORKERS 1980"
+_column(111)   int   PIN8101F :PIN8101F %1f    "PERSONAL INCOME BY RESIDENCE 1981 FLAG"
+_column(112)   double PIN8101            %10f   "PERSONAL INCOME BY RESIDENCE 1981"
+_column(122)   int   PIN8102F :PIN8102F %1f    "PER CAPITA PERSONAL INCOME 1981 FLAG"
+_column(123)   double PIN8102            %10f   "PER CAPITA PERSONAL INCOME 1981"
+_column(133)   int   PIN8104F :PIN8104F %1f    "TRANSFER PAYMENTS 1981 FLAG"
+_column(134)   double PIN8104            %10f   "TRANSFER PAYMENTS 1981"
+_column(144)   int   PIN8106F :PIN8106F %1f    "EARNINGS IN ALL INDUSTRIES 1981 FLAG"
+_column(145)   double PIN8106            %10f   "EARNINGS IN ALL INDUSTRIES 1981"
+_column(155)   int   PIN8111F :PIN8111F %1f    "EARNINGS IN MANUFACTURING 1981 FLAG"
+_column(156)   double PIN8111            %10f   "EARNINGS IN MANUFACTURING 1981"
+_column(166)   int   PIN8125F :PIN8125F %1f    "EARNINGS IN TRADE 1981 FLAG"
+_column(167)   double PIN8125            %10f   "EARNINGS IN TRADE 1981"
+_column(177)   int   PIN8116F :PIN8116F %1f    "EARNINGS IN SERVICES 1981 FLAG"
+_column(178)   double PIN8116            %10f   "EARNINGS IN SERVICES 1981"
+_column(188)   int   PIN8120F :PIN8120F %1f    "OTHER SIG. IND CODE(P INCOME) 1980 FLAG"
+_column(189)   double PIN8120  :PIN8120  %10f   "OTHER SIG. IND CODE(P INCOME) 1980"
+_column(199)   int   PIN8121F :PIN8121F %1f    "OTHER SIG. IND PCT(P INCOME) 1980 FLAG"
+_column(200)   double PIN8121            %10.1f "OTHER SIG. IND PCT (P INCOME)1980"
+_column(210)   int   HHL8002F :HHL8002F %1f    "HOUSEHOLDS 1980 FLAG"
+_column(211)   double HHL8002            %10f   "HOUSEHOLDS 1980"
+_column(221)   int   MON7918F :MON7918F %1f    "INCOME OF 10,000 TO 19,999 IN 1979 FLAG"
+_column(222)   double MON7918            %10f   "INCOME OF 10,000 TO 19,999 IN 1979"
+_column(232)   int   MON7941F :MON7941F %1f    "INCOME OF 20,000 TO 29,999 IN 1979 FLAG"
+_column(233)   double MON7941            %10f   "INCOME OF 20,000 TO 29,999 IN 1979"
+_column(243)   int   MON7923F :MON7923F %1f    "INCOME OF 30,000 TO 39,999 IN 1979 FLAG"
+_column(244)   double MON7923            %10f   "INCOME OF 30,000 TO 39,999 IN 1979"
+_column(254)   int   MON7924F :MON7924F %1f    "INCOME OF 40,000 TO 49,999 IN 1979 FLAG"
+_column(255)   double MON7924            %10f   "INCOME OF 40,000 TO 49,999 IN 1979"
+_column(265)   int   MON7942F :MON7942F %1f    "INCOME OF 50,000 OR MORE IN 1979 FLAG"
+_column(266)   double MON7942            %10f   "INCOME OF 50,000 OR MORE IN 1979"
+_column(276)   int   MON7927F :MON7927F %1f    "MEDIAN HOUSEHOLD INCOME IN 1979 FLAG"
+_column(277)   double MON7927            %10f   "MEDIAN HOUSEHOLD INCOME IN 1979"
+_column(287)   int   MON7928F :MON7928F %1f    "RANK MEDIAN HOUSEHOLD INCOME 1979 FLAG"
+_column(288)   double MON7928            %10f   "RANK MEDIAN HOUSEHOLD INCOME 1979"
+_column(298)   int   MON7901F :MON7901F %1f    "MEDIAN FAMILY MONEY INCOME 1979 FLAG"
+_column(299)   double MON7901            %10f   "MEDIAN FAMILY MONEY INCOME 1979"
+_column(309)   int   MON7930F :MON7930F %1f    "PER CAPITA MONEY INCOME IN 1979 FLAG"
+_column(310)   double MON7930            %10f   "PER CAPITA MONEY INCOME IN 1979"
+_column(320)   int   HHL8005F :HHL8005F %1f    "FAMILIES 1980 FLAG"
+_column(321)   double HHL8005            %10f   "FAMILIES 1980"
+_column(331)   int   HHL8080F :HHL8080F %1f    "FAMILIES W/ FEMALE HOUSEHOLDER 1980 FLAG"
+_column(332)   double HHL8080            %10f   "FAMILIES W/ FEMALE HOUSEHOLDER 1980"
+_column(342)   int   POV7901F :POV7901F %1f    "FAMILIES BELOW POVERTY LEVEL 1979 FLAG"
+_column(343)   double POV7901            %10f   "FAMILIES BELOW POVERTY LEVEL 1979"
+_column(353)   int   POV7903F :POV7903F %1f    "FAMILIES W/FEMALE BELOW POV 1979 FLAG"
+_column(354)   double POV7903            %10f   "FAMILIES W/FEMALE BELOW POV 1979"
+_column(364)   int   POV7904F :POV7904F %1f    "PERSONS BELOW POVERTY IN 1979 FLAG"
+_column(365)   double POV7904            %10f   "PERSONS BELOW POVERTY IN 1979"
+_column(375)   int   POV7911F :POV7911F %1f    "POVERTY STATUS DETERMINED IN 1979 FLAG"
+_column(376)   double POV7911            %10f   "POVERTY STATUS DETERMINED IN 1979"
+_column(386)   int   POV7907F :POV7907F %1f    "RLTD CHIDRN UNDER PVRTY LEVEL 1979 FLAG"
+_column(387)   double POV7907            %10f   "RLTE CHLDRN UNDER PVRTY LEVEL 1979"
+_column(397)   int   POV7912F :POV7912F %1f    "RELATED CHILDREN PVRTY STATUS 1979 FLAG"
+_column(398)   double POV7912            %10f   "RELATED CHILDREN PVRTY STATUS 1979"
+_column(408)   int   GOV7701F :GOV7701F %1f    "GEN REVENUE LOCAL GOVERNMENT 1977 FLAG"
+_column(409)   double GOV7701            %10f   "GEN REVENUE LOCAL GOVERNMENT 1977"
+_column(419)   int   GOV7702F :GOV7702F %1f    "INTERGOVERNMENTAL REVENUE 1977 FLAG"
+_column(420)   double GOV7702            %10f   "INTERGOVERNMENTAL REVENUE 1977"
+_column(430)   int   GOV7703F :GOV7703F %1f    "INTERGOV REV FROM STATE GOVT 1977 FLAG"
+_column(431)   double GOV7703            %10f   "INTERGOV REV FROM STATE GOVT 1977"
+_column(441)   int   GOV7704F :GOV7704F %1f    "TAXES OF LOCAL GOVERNMENT 1977 FLAG"
+_column(442)   double GOV7704            %10f   "TAXES OF LOCAL GOVERNMENT 1977"
+_column(452)   int   GOV7706F :GOV7706F %1f    "PROP TAXES OF LOCAL GOVERNMENT 1977 FLAG"
+_column(453)   double GOV7706            %10f   "PROP TAXES OF LOCAL GOVERNMENT 1977"
+_column(463)   int   GOV7707F :GOV7707F %1f    "SALES/GROSS RCPTS OF LOC GOVT 1977 FLAG"
+_column(464)   double GOV7707            %10f   "SALES/GROSS RCPTS OF LOC GOVT 1977"
+_column(474)   int   GOV7708F :GOV7708F %1f    "DIRECT GEN EXP LOC GOVT 1977 FLAG"
+_column(475)   double GOV7708            %10f   "DIRECT GEN EXP LOC GOVT 1977"
+_column(485)   int   GOV7710F :GOV7710F %1f    "EXPENDITURE FOR EDUCATION 1977 FLAG"
+_column(486)   double GOV7710            %10f   "EXPENDITURE FOR EDUCATION 1977"
+_column(496)   int   GOV7711F :GOV7711F %1f    "EXPENDITURE FOR HIGHWAYS 1977 FLAG"
+_column(497)   double GOV7711            %10f   "EXPENDITURE FOR HIGHWAYS 1977"
+_column(507)   int   GOV7712F :GOV7712F %1f    "EXPENDITURE FOR PUB WELFARE 1977 FLAG"
+_column(508)   double GOV7712            %10f   "EXPENDITURE FOR PUB WELFARE 1977"
+_column(518)   int   GOV7713F :GOV7713F %1f    "EXPENDITURE HEALTH/HOSPITALS 1977 FLAG"
+_column(519)   double GOV7713            %10f   "EXPENDITURE HEALTH/HOSPITALS 1977"
+_column(529)   int   GOV7714F :GOV7714F %1f    "EXPENDITURE POLICE PROTECTION 1977 FLAG"
+_column(530)   double GOV7714            %10f   "EXPENDITURE POLICE PROTECTION 1977"
+_column(540)   int   GOV7705F :GOV7705F %1f    "PROP TAXES LOC GOVT PER CAPITA 1977 FLAG"
+_column(541)   double GOV7705            %10f   "PROP TAXES LOC GOVT PER CAPITA 1977"
+_column(551)   int   GOV7709F :GOV7709F %1f    "DIR GEN EXPEND. OF LOC GOVT 1977 FLAG"
+_column(552)   double GOV7709            %10f   "DIR GEN EXPEND. OF LOC GOVT 1977"
+_column(562)   int   GOV7715F :GOV7715F %1f    "DEBT OUTSTANDING OF LOCAL GOVT 1977 FLAG"
+_column(563)   double GOV7715            %10f   "DEBT OUTSTANDING OF LOCAL GOVT 1977"
+_column(573)   int   GOV7717F :GOV7717F %1f    "EMPLOYMENT OF LOCAL GOVT 1977 FLAG"
+_column(574)   double GOV7717            %10f   "EMPLOYMENT OF LOCAL GOVT 1977"
+_column(584)   int   GOV7718F :GOV7718F %1f    "PAYROLL OF LOCAL GOVT (OCT) 1977 FLAG"
+_column(585)   double GOV7718            %10f   "PAYROLL OF LOCAL GOVT (OCT) 1977"
+_column(595)   int   MAN7701F :MAN7701F %1f    "MANUFACTURING ESTABLISHMENTS 1977 FLAG"
+_column(596)   double MAN7701            %10f   "MANUFACTURING ESTABLISHMENTS 1977"
+_column(606)   int   MAN7705F :MAN7705F %1f    "MAN. ESTBLSHMNT 20/MORE EMPL 1977 FLAG"
+_column(607)   double MAN7705            %10f   "MAN. ESTBLSHMNT 20/MORE EMPL 1977"
+_column(617)   int   MAN7708F :MAN7708F %1f    "MANUFACTURING EMPLOYEES 1977 FLAG"
+_column(618)   double MAN7708            %10.1f "MANUFACTURING EMPLOYEES 1977"
+_column(628)   int   MAN7709F :MAN7709F %1f    "MANUFACTURING PAYROLL 1977 FLAG"
+_column(629)   double MAN7709            %10.1f "MANUFACTURING PAYROLL 1977"
+_column(639)   int   MAN7713F :MAN7713F %1f    "VALUE ADDED BY MANUFACTURE 1977 FLAG"
+_column(640)   double MAN7713            %10.1f "VALUE ADDED BY MANUFACTURE 1977"
+_column(650)   int   MAN7716F :MAN7716F %1f    "VALUE OF SHIPMENTS BY MAN 1977 FLAG"
+_column(651)   double MAN7716            %10.1f "VALUE OF SHIPMENTS BY MAN 1977"
+_column(661)   int   MAN7710F :MAN7710F %1f    "PROD WORKERS OF MAN. ESTB 1977 FLAG"
+_column(662)   double MAN7710            %10.1f "PROD WORKERS OF MAN. ESTB 1977"
+_column(672)   int   MAN7711F :MAN7711F %1f    "WORK-HRS OF MAN. PRDCTN WRKRS 1977 FLAG"
+_column(673)   double MAN7711            %10.1f "WORK-HRS OF MAN. PRDCTN WRKRS 1977"
+_column(683)   int   MAN7712F :MAN7712F %1f    "WAGES OF MAN. PRDCTN WORKERS 1977 FLAG"
+_column(684)   double MAN7712            %10.1f "WAGES OF MAN. PRDCTN WORKERS 1977"
+_column(694)   int   RET7703F :RET7703F %1f    "RETAIL TRADE ESTAB. W/ PAYROLL 1977 FLAG"
+_column(695)   double RET7703            %10f   "RETAIL TRADE ESTAB. W/ PAYROLL 1977"
+_column(705)   int   RET7726F :RET7726F %1f    "PAID EMPLYMNT OF TRADE ESTAB. 1977 FLAG"
+_column(706)   double RET7726            %10f   "PAID EMPLYMNT OF TRADE ESTAB. 1977"
+_column(716)   int   RET7725F :RET7725F %1f    "ANNUAL PAYROLL OF TRADE ESTAB. 1977 FLAG"
+_column(717)   double RET7725            %10f   "ANNUAL PAYROLL OF TRADE ESTAB. 1977"
+_column(727)   int   RET7702F :RET7702F %1f    "RETAIL TRADE ESTABLISHMENTS 1977 FLAG"
+_column(728)   double RET7702            %10f   "RETAIL TRADE ESTABLISHMENTS 1977"
+_column(738)   int   RET7713F :RET7713F %1f    "SALES OF RETAIL ESTABLISHMENTS 1977 FLAG"
+_column(739)   double RET7713            %10f   "SALES OF RETAIL ESTABLISHMENTS 1977"
+_column(749)   int   POP7701F :POP7701F %1f    "POPULATION (EST.-JULY 1) 1977 FLAG"
+_column(750)   double POP7701            %10f   "POPULATION (EST.-JULY 1) 1977"
+_column(760)   int   RET7717F :RET7717F %1f    "SALES: GEN MERCH. GROUP STORES 1977 FLAG"
+_column(761)   double RET7717            %10f   "SALES: GEN MERCH. GROUP STORES 1977"
+_column(771)   int   RET7723F :RET7723F %1f    "SALES: EATING/DRINKING PLACES 1977 FLAG"
+_column(772)   double RET7723            %10f   "SALES: EATING/DRINKING PLACES 1977"
+_column(782)   int   RET7715F :RET7715F %1f    "SALES: TRADE ESTAB. W/ PAYROLL 1977 FLAG"
+_column(783)   double RET7715            %10f   "SALES: TRADE ESTAB. W/ PAYROLL 1977"
+_column(793)   int   WHS7701F :WHS7701F %1f    "WHOLESALE TRADE ESTAB 1977 FLAG"
+_column(794)   double WHS7701            %10f   "WHOLESALE TRADE ESTAB 1977"
+_column(804)   int   WHS7703F :WHS7703F %1f    "SALES OF WHLSL TRADE ESTAB 1977 FLAG"
+_column(805)   double WHS7703            %10f   "SALES OF WHLSL TRADE ESTAB 1977"
+_column(815)   int   WHS7705F :WHS7705F %1f    "SALES: MERCHANT WHOLESALERS 1977 FLAG"
+_column(816)   double WHS7705            %10f   "SALES: MERCHANT WHOLESALERS 1977"
+_column(826)   int   WHS7706F :WHS7706F %1f    "PAID EMPLOYMENT (WHOLESALE) 1977 FLAG"
+_column(827)   double WHS7706            %10f   "PAID EMPLOYMENT (WHOLESALE) 1977"
+_column(837)   int   WHS7707F :WHS7707F %1f    "ANNUAL PAYROLL (WHOLESALE) 1977 FLAG"
+_column(838)   double WHS7707            %10f   "ANNUAL PAYROLL (WHOLESALE) 1977"
+_column(848)   int   SER7701F :SER7701F %1f    "SELECTED SERVICE ESTAB 1977 FLAG"
+_column(849)   double SER7701            %10f   "SELECTED SERVICE ESTAB 1977"
+_column(859)   int   SER7703F :SER7703F %1f    "RECEIPTS OF SEL SERV ESTAB 1977 FLAG"
+_column(860)   double SER7703            %10f   "RECEIPTS OF SEL SERV ESTAB 1977"
+_column(870)   int   SER7706F :SER7706F %1f    "RECEIPTS: HOTELS, MOTELS, ETC. 1977 FLAG"
+_column(871)   double SER7706            %10f   "RECEIPTS: HOTELS, MOTELS, ETC. 1977"
+_column(881)   int   SER7707F :SER7707F %1f    "RECEIPTS: AUTO REPAIR, SERV,1977 FLAG"
+_column(882)   double SER7707            %10f   "RECEIPTS: AUTO REPAIR, SERV,1977"
+_column(892)   int   SER7708F :SER7708F %1f    "RECEIPTS: AMUSEMENT/REC 1977 FLAG"
+_column(893)   double SER7708            %10f   "RECEIPTS: AMUSEMENT/REC 1977"
+_column(903)   int   SER7705F :SER7705F %1f    "RECEIPTS SEL SERV W/PAYROLL 1977 FLAG"
+_column(904)   double SER7705            %10f   "RECEIPTS SEL SERV W/PAYROLL 1977"
+_column(914)   int   SER7702F :SER7702F %1f    "SELECTED SERV ESTAB W PAYROLL 1977 FLAG"
+_column(915)   double SER7702            %10f   "SELECTED SERV ESTAB W/PAYROLL 1977"
+_column(925)   int   SER7712F :SER7712F %1f    "PAID EMPLOYMENT SELECTED SERV 1977 FLAG"
+_column(926)   double SER7712            %10f   "PAID EMPLOYMENT SELECTED SERV 1977"
+_column(936)   int   SER7711F :SER7711F %1f    "ANNUAL PAYROLL SEL SERVICE 1977 FLAG"
+_column(937)   double SER7711            %10f   "ANNUAL PAYROLL SEL SERVICE 1977"
+_column(947)   int   BAN8101F :BAN8101F %1f    "BANK DEPOSITS TOTAL (JUNE) 1981 FLAG"
+_column(948)   double BAN8101            %10f   "BANK DEPOSITS TOTAL (JUNE) 1981"
+_column(958)   int   BAN8102F :BAN8102F %1f    "BANK DEPOSITS-TIME,TOTAL (JUNE)1981 FLAG"
+_column(959)   double BAN8102            %10f   "BANK DEPOSITS-TIME,TOTAL (JUNE)1981"
+_column(969)   int   SVL8101F :SVL8101F %1f    "SAVINGS CAPITAL (SEPT) 1981 FLAG"
+_column(970)   double SVL8101            %10f   "SAVINGS CAPITAL (SEPT) 1981"
+_column(980)   int   ELE8001F :ELE8001F %1f    "VOTE FOR PRESIDENT 1980 FLAG"
+_column(981)   double ELE8001            %10f   "VOTE FOR PRESIDENT 1980"
+_column(991)   int   ELE8003F :ELE8003F %1f    "VOTE FOR PRES-LEADING PARTY 1980 FLAG"
+_column(992)   double ELE8003  :ELE8003  %10f   "VOTE FOR PRES-LEADING PARTY 1980"
+_column(1002)  int   ELE8002F :ELE8002F %1f    "VOTE-PRCNT FOR LEADING PARTY 1980 FLAG"
+_column(1003)  double ELE8002            %10.1f "VOTE-PRCNT FOR LEADING PARTY 1980"
+_column(1013)  int   GOV8123F :GOV8123F %1f    "FED GOVT CIVILIAN EMPLOYMENT 1981 FLAG"
+_column(1014)  double GOV8123            %10f   "FED GOVT CIVILIAN EMPLOYMENT 1981"
+_column(1024)  int   PIN8118F :PIN8118F %1f    "EARNINGS IN FED CIVILIAN GOVT 1981 FLAG"
+_column(1025)  double PIN8118            %10f   "EARNINGS IN FED CIVILIAN GOVT 1981"
+_column(1035)  int   POP8007F :POP8007F %1f    "RURAL FARM POPULATION 1980 FLAG"
+_column(1036)  double POP8007            %10f   "RURAL FARM POPULATION 1980"
+_column(1046)  int   PIN8007F :PIN8007F %1f    "FARM EARNINGS 1980 FLAG"
+_column(1047)  double PIN8007            %10f   "FARM EARNINGS 1980"
+_column(1057)  int   AGR7801F :AGR7801F %1f    "FARMS- NUMBER 1978 FLAG"
+_column(1058)  double AGR7801            %10f   "FARMS- NUMBER 1978"
+_column(1068)  int   AGR7810F :AGR7810F %1f    "FARMS WITH 10 ACRES 1978 FLAG"
+_column(1069)  double AGR7810            %10f   "FARMS WITH 10 ACRES 1978"
+_column(1079)  int   AGR7811F :AGR7811F %1f    "FARMS WITH 10 TO 49 ACRES 1978 FLAG"
+_column(1080)  double AGR7811            %10f   "FARMS WITH 10 TO 49 ACRES 1978"
+_column(1090)  int   AGR7842F :AGR7842F %1f    "FARMS WITH 500 ACRES OR MORE 1978 FLAG"
+_column(1091)  double AGR7842            %10f   "FARMS WITH 500 ACRES OR MORE 1978"
+_column(1101)  int   AGR7818F :AGR7818F %1f    "LAND IN FARMS 1978 (ACRES) FLAG"
+_column(1102)  double AGR7818            %10f   "LAND IN FARMS 1978 (ACRES)"
+_column(1112)  int   AGR7824F :AGR7824F %1f    "AVERAGE SIZE OF FARM 1978 (ACRES) FLAG"
+_column(1113)  double AGR7824            %10f   "AVERAGE SIZE OF FARM 1978 (ACRES)"
+_column(1123)  int   AGR7819F :AGR7819F %1f    "FARMLAND AS PCT OF TOTAL 1978 FLAG"
+_column(1124)  double AGR7819            %10.1f "FARMLAND AS PCT OF TOTAL 1978"
+_column(1134)  int   AGR7823F :AGR7823F %1f    "IRRIGATED LAND 1978 (ACRES) FLAG"
+_column(1135)  double AGR7823            %10f   "IRRIGATED LAND 1978 (ACRES)"
+_column(1145)  int   AGR7821F :AGR7821F %1f    "CROPLAND 1978 (ACRES) FLAG"
+_column(1146)  double AGR7821            %10f   "CROPLAND 1978 (ACRES)"
+_column(1156)  int   AGR7803F :AGR7803F %1f    "FARMS SALES $2,500 OR MORE 1978 FLAG"
+_column(1157)  double AGR7803            %10f   "FARMS SALES $2,500 OR MORE 1978"
+_column(1167)  int   AGR7806F :AGR7806F %1f    "FARMS SALES $40,000 OR MORE 1978 FLAG"
+_column(1168)  double AGR7806            %10f   "FARMS SALES $40,000 OR MORE 1978"
+_column(1178)  int   AGR7827F :AGR7827F %1f    "VALUE OF FARM PRODUCTS 1978 FLAG"
+_column(1179)  double AGR7827            %10f   "VALUE OF FARM PRODUCTS 1978"
+_column(1189)  int   AGR7828F :AGR7828F %1f    "VALUE CROPS SOLD ON FARMS 1978 FLAG"
+_column(1190)  double AGR7828            %10f   "VALUE CROPS SOLD ON FARMS 1978"
+_column(1200)  int   AGR7829F :AGR7829F %1f    "VALUE LIVESTOCK AND PRODUCTS 1978 FLAG"
+_column(1201)  double AGR7829            %10f   "VALUE LIVESTOCK AND PRODUCTS 1978"
+_column(1211)  int   AGR7832F :AGR7832F %1f    "OPERATORS RESIDING ON FARM 1978 FLAG"
+_column(1212)  double AGR7832            %10f   "OPERATORS RESIDING ON FARM 1978"
+_column(1222)  int   AGR7843F :AGR7843F %1f    "OPERATORS 100 OR MORE DAYS OFF 1978 FLAG"
+_column(1223)  double AGR7843            %10f   "OPERATORS 100 OR MORE DAYS OFF 1978"
+_column(1233)  int   AGR7825F :AGR7825F %1f    "AVG. VALUE PER FARM 1978 FLAG"
+_column(1234)  double AGR7825            %10f   "AVG. VALUE PER FARM 1978"
+_column(1244)  int   AGR7826F :AGR7826F %1f    "AVG. VALUE PER ACRE 1978 FLAG"
+_column(1245)  double AGR7826            %10f   "AVG. VALUE PER ACRE 1978"
+_column(1255)  int   AGR7835F :AGR7835F %1f    "INDIVIDUAL/FAMILY FARMS NUMBER 1978 FLAG"
+_column(1256)  double AGR7835            %10f   "INDIVIDUAL/FAMILY FARMS NUMBER 1978"
+_column(1266)  int   AGR7836F :AGR7836F %1f    "INDIVIDUAL/FAMILY FARMS LAND 1978 FLAG"
+_column(1267)  double AGR7836            %10f   "INDIVIDUAL/FAMILY FARMS LAND 1978"
+}
+
+(3,189 observations read)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(98 real changes made, 98 to missing)
+(111 real changes made, 111 to missing)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+id was long now str5
+(1 real change made)
+(316 real changes made)
+(data now sorted by fipstate fipscnty)
+  variable land_area_1980_f was int now byte
+  variable tot_pop_1980_f was int now byte
+  variable white_pop_1980_f was int now byte
+  variable black_pop_1980_f was int now byte
+  variable hispanic_pop_1980_f was int now byte
+  variable serious_crimes_1981_f was int now byte
+  variable crime_rate_1981_f was int now byte
+  variable pop_25_om_1980_f was int now byte
+  variable pop_25_om_hs_1980_f was int now byte
+  variable pop_25_om_coll_1980_f was int now byte
+  variable land_area_1980 was double now long
+  variable tot_pop_1980 was double now long
+  variable white_pop_1980 was double now long
+  variable black_pop_1980 was double now long
+  variable hispanic_pop_1980 was double now long
+  variable serious_crimes_1981 was double now long
+  variable crime_rate_1981 was double now int
+  variable pop_25_om_1980 was double now long
+  variable pop_25_om_hs_1980 was double now long
+  variable pop_25_om_coll_1980 was double now long
+  (165,828 bytes saved)
+==================================================================================================
+File: ../temp/cleaned_1980.dta
+Key: fipstate fipscnty
+==================================================================================================
+  3189:24(108888):2505332892:2606323742
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    fipstate |          0
+    fipscnty |          0
+areanam~1980 |          0
+land_area_~f |      3,189           0           0          0          0
+land_ar~1980 |      3,189    3329.528     64233.2          2    3539289
+-------------+---------------------------------------------------------
+tot_pop_19~f |      3,189           0           0          0          0
+tot_pop_1980 |      3,189    213119.3     4095776         91   2.27e+08
+white_pop_~f |      3,189           0           0          0          0
+white_p~1980 |      3,189    177831.6     3413983         21   1.89e+08
+black_pop_~f |      3,189           0           0          0          0
+-------------+---------------------------------------------------------
+black_p~1980 |      3,189    24912.84    481484.8          0   2.65e+07
+hispanic_p~f |      3,189           0           0          0          0
+hispani~1980 |      3,189    13738.18    282006.5          0   1.46e+07
+serious_cr~f |      3,189    .0921919    .5178421          0          3
+serious~1981 |      3,091    12498.09    238443.1          0   1.29e+07
+-------------+---------------------------------------------------------
+crime_rate~f |      3,189    .1044214    .5499594          0          3
+crime_r~1981 |      3,078    3243.415    2310.015          0      31640
+pop~m_1980_f |      3,189           0           0          0          0
+pop_2~m_1980 |      3,189      124963     2402565         69   1.33e+08
+pop~s_1980_f |      3,189           0           0          0          0
+-------------+---------------------------------------------------------
+pop_2~s_1980 |      3,189    83067.25     1598564         38   8.83e+07
+pop~l_1980_f |      3,189           0           0          0          0
+pop_2~l_1980 |      3,189    20280.79    391065.2          3   2.16e+07
+density~1980 |      3,189     220.926    1577.353   .0461657   64922.05
+
+
+
+
+(note: file ../temp/cleaned_1980.dta not found)
+file ../temp/cleaned_1980.dta saved
+(note: file ../temp/cleaned_1990_COF01.dta not found)
+file ../temp/cleaned_1990_COF01.dta saved
+(note: file ../temp/cleaned_1990_COF02.dta not found)
+file ../temp/cleaned_1990_COF02.dta saved
+(note: file ../temp/cleaned_1990_COF06.dta not found)
+file ../temp/cleaned_1990_COF06.dta saved
+note: label truncated to 80 characters
+(note: file ../temp/cleaned_1990_COF07.dta not found)
+file ../temp/cleaned_1990_COF07.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             3,193  
+    -----------------------------------------
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             3,193  
+    -----------------------------------------
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             3,193  
+    -----------------------------------------
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(239 real changes made, 239 to missing)
+(259 real changes made, 259 to missing)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(3,155 real changes made)
+(3,167 real changes made)
+(data already sorted by fipstate fipscnty)
+  variable areaname_1990 was strL now str35
+  (207,209 bytes saved)
+==================================================================================================
+File: ../temp/cleaned_1990.dta
+Key: fipstate fipscnty
+==================================================================================================
+  3193:24(54764):4114922144:1640580134
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    fipstate |          0
+    fipscnty |          0
+areanam~1990 |          0
+land_area_~f |      3,193           0           0          0          0
+land_ar~1990 |      3,193    3322.582    64134.48          2    3536278
+-------------+---------------------------------------------------------
+tot_pop_19~f |      3,193           0           0          0          0
+tot_pop_1990 |      3,193    233676.7     4499116         52   2.49e+08
+white_pop_~f |      3,193           0           0          0          0
+white_p~1990 |      3,193    187616.1     3604386         30   2.00e+08
+black_pop_~f |      3,193           0           0          0          0
+-------------+---------------------------------------------------------
+black_p~1990 |      3,193    28173.56    544808.3          0   3.00e+07
+hispanic_p~f |      3,193           0           0          0          0
+hispani~1990 |      3,193    21002.87    434536.6          0   2.24e+07
+serious_cr~f |      3,193    .5142499    .8361359          0          3
+serious~1991 |      2,954    14374.09    268496.8          0   1.42e+07
+-------------+---------------------------------------------------------
+crime_rate~f |      3,193    .2433448    .8191629          0          3
+crime_r~1991 |      2,934    3314.188    2245.768          0      20179
+pop~m_1990_f |      3,193           0           0          0          0
+pop_2~m_1990 |      3,193    149265.7     2873813         26   1.59e+08
+pop~s_1990_f |      3,193           0           0          0          0
+-------------+---------------------------------------------------------
+pop~l_1990_f |      3,193           0           0          0          0
+pop_2~s_1990 |      3,193    112281.5     2161086         26   1.19e+08
+pop_2~l_1990 |      3,193    30340.29    585167.8          0   3.23e+07
+density~1990 |      3,193    222.0083    1436.585   .0539584   53126.29
+
+
+
+
+(note: file ../temp/cleaned_1990.dta not found)
+file ../temp/cleaned_1990.dta saved
+(33 vars, 3,195 obs)
+id was long now str5
+(1 real change made)
+(321 real changes made)
+(note: file ../temp/cleaned_2000_cc00_tab_B1.dta.dta not found)
+file ../temp/cleaned_2000_cc00_tab_B1.dta.dta saved
+(44 vars, 3,195 obs)
+id was long now str5
+(1 real change made)
+(321 real changes made)
+(note: file ../temp/cleaned_2000_cc00_tab_B2.dta not found)
+file ../temp/cleaned_2000_cc00_tab_B2.dta saved
+(43 vars, 3,195 obs)
+id was long now str5
+(1 real change made)
+(321 real changes made)
+(note: file ../temp/cleaned_2000_cc00_tab_B6.dta not found)
+file ../temp/cleaned_2000_cc00_tab_B6.dta saved
+(3,183 real changes made)
+(0 real changes made)
+(0 real changes made)
+(3 real changes made)
+(2 real changes made)
+(2 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(4 observations deleted)
+(3 real changes made)
+(3 real changes made)
+(3 real changes made)
+(2 observations deleted)
+(5 observations deleted)
+(note: file ../temp/cleaned_2000_cc07_tabB4.dta not found)
+file ../temp/cleaned_2000_cc07_tabB4.dta saved
+(3,183 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(3 real changes made)
+(2 real changes made)
+(2 real changes made)
+(4 observations deleted)
+(2 observations deleted)
+(5 observations deleted)
+(note: file ../temp/cleaned_2000_cc07_tabB1.dta not found)
+file ../temp/cleaned_2000_cc07_tabB1.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             3,189  
+    -----------------------------------------
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             3,187  
+    -----------------------------------------
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             3,187  
+    -----------------------------------------
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             3,187  
+    -----------------------------------------
+(0 real changes made)
+(0 real changes made)
+land_area_2000 has all characters numeric; replaced as long
+(0 real changes made)
+(0 real changes made)
+pop_25_om_2000 has all characters numeric; replaced as long
+(0 real changes made)
+(0 real changes made)
+pop_25_om_hs_pct_2000 has all characters numeric; replaced as double
+(0 real changes made)
+(0 real changes made)
+pop_25_om_coll_pct_2000 has all characters numeric; replaced as double
+(0 real changes made)
+(0 real changes made)
+tot_pop_2000 has all characters numeric; replaced as long
+(0 real changes made)
+(0 real changes made)
+hispanic_pop_2000 has all characters numeric; replaced as long
+(0 real changes made)
+(0 real changes made)
+hispanic_pop_pct_2000 has all characters numeric; replaced as double
+(0 real changes made)
+(0 real changes made)
+white_pop_2000 has all characters numeric; replaced as long
+(0 real changes made)
+(0 real changes made)
+white_pop_pct_2000 has all characters numeric; replaced as double
+(0 real changes made)
+(0 real changes made)
+black_pop_2000 has all characters numeric; replaced as long
+(0 real changes made)
+(0 real changes made)
+black_pop_pct_2000 contains nonnumeric bytes; no replace
+(0 real changes made)
+(448 real changes made)
+serious_crimes_1999 has all characters numeric; replaced as long
+(448 missing values generated)
+(0 real changes made)
+(449 real changes made)
+violent_crimes_1999 has all characters numeric; replaced as long
+(449 missing values generated)
+(0 real changes made)
+(448 real changes made)
+property_crimes_1999 has all characters numeric; replaced as long
+(448 missing values generated)
+(0 real changes made)
+(155 real changes made)
+serious_crimes_1990 has all characters numeric; replaced as long
+(155 missing values generated)
+(0 real changes made)
+(473 real changes made)
+crime_rate_1999 has all characters numeric; replaced as int
+(473 missing values generated)
+(0 real changes made)
+(3,160 real changes made)
+(data now sorted by fipstate fipscnty)
+  variable areaname_2000 was str38 now str31
+  (22,309 bytes saved)
+==================================================================================================
+File: ../temp/cleaned_2000.dta
+Key: fipstate fipscnty
+==================================================================================================
+  3187:16(87594):1149110719:4262226133
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    fipstate |          0
+    fipscnty |          0
+areanam~2000 |          0
+pop_2~m_2000 |      3,187    170821.3     3298066         51   1.82e+08
+land_ar~2000 |      3,187    3329.242    64210.65          2    3537441
+-------------+---------------------------------------------------------
+tot_pop_2000 |      3,187      264099     5095366         67   2.81e+08
+hispani~2000 |      3,187    32825.92    676779.1          1   3.53e+07
+white_p~2000 |      3,187    198508.2     3817587         38   2.11e+08
+black_p~2000 |      3,187    32435.52    629734.4          0   3.47e+07
+serious_cr~f |          0
+-------------+---------------------------------------------------------
+serious~1999 |      2,739    11606.96    209002.6          0   1.07e+07
+crime_rate~f |          0
+crime_r~1999 |      2,714    2926.994    1843.088         28      20965
+density~2000 |      3,187    241.9889    1659.735   .0449006   66834.56
+pop_2~s_2000 |      3,187    137377.4     2649491         44   1.46e+08
+-------------+---------------------------------------------------------
+pop_2~l_2000 |      3,187    41634.08    806237.7          3   4.45e+07
+
+
+
+
+(note: file ../temp/cleaned_2000.dta not found)
+file ../temp/cleaned_2000.dta saved
+(County and City Data Book [United States] Consolidated File: County Data, 1947-1)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             3,181  
+    -----------------------------------------
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             3,179  
+    -----------------------------------------
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             3,171  
+    -----------------------------------------
+(51 observations deleted)
+(data already sorted by fipstate fipscnty)
+  variable areaname_1970 was str27 now str21
+  variable areaname_1980 was str36 now str24
+  variable areaname_1990 was str35 now str24
+  variable areaname_2000 was str31 now str22
+  (118,560 bytes saved)
+==================================================================================================
+File: ../output/county_panel.dta
+Key: fipstate fipscnty
+==================================================================================================
+  3120:51(57533):1398854961:3212169699
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    fipstate |          0
+    fipscnty |          0
+areanam~1970 |          0
+land_ar~1970 |      3,117    1029.115    2114.923          2      73053
+tot_po~1970a |      3,117    64634.49      228057         73    7036463
+-------------+---------------------------------------------------------
+tot_po~1970b |      3,119    64575.35    228127.6        164    7041980
+white_p~1970 |      3,117    56696.31      190630         73    6030031
+pop_2~m_1970 |      3,117    34926.66    127180.6         41    3960744
+serious~1975 |      2,848     3731.14    19187.27          0     581431
+crime_r~1975 |      2,848    2592.876     2258.85          0      40687
+-------------+---------------------------------------------------------
+black_p~1970 |      3,119    7124.752     40820.5          0    1175666
+hispani~1970 |        826     10671.4    53944.02        385    1288682
+pop_2~s_1970 |      3,117    18289.96    71929.61          8    2455661
+pop_2~l_1970 |      3,117    3722.084     15894.3          0     503015
+density~1970 |      3,116     224.614    1782.388   .0651308   66923.17
+-------------+---------------------------------------------------------
+areanam~1980 |          0
+land_ar~1980 |      3,120    1066.289    3376.832          2     159099
+tot_pop_1980 |      3,120    71951.12    235139.5         91    7477503
+white_p~1980 |      3,120    60099.62    174038.5         66    5135540
+black_p~1980 |      3,120    8351.828    46110.87          0    1346186
+-------------+---------------------------------------------------------
+hispani~1980 |      3,120    4493.381    44145.12          0    2065503
+serious~1981 |      3,025    4178.034    21720.75          0     726845
+crime_r~1981 |      3,012    3181.982    2256.843          0      31640
+pop_2~m_1980 |      3,120     42155.3    140104.4         69    4430503
+pop_2~s_1980 |      3,120    28035.93    96959.71         38    3094462
+-------------+---------------------------------------------------------
+pop_2~l_1980 |      3,120    6838.886    26899.15          3     818658
+density~1980 |      3,120    215.5962    1581.479   .0494849   64922.05
+areanam~1990 |          0
+land_ar~1990 |      3,120     1055.32    3280.759          2     157121
+tot_pop_1990 |      3,120    78939.68    262537.3        107    8863164
+-------------+---------------------------------------------------------
+white_p~1990 |      3,120    63455.71    176904.7         93    5035103
+black_p~1990 |      3,120    9436.576    49173.47          0    1317147
+hispani~1990 |      3,120    6853.593    69905.95          0    3351242
+serious~1991 |      2,888    4796.805    24208.21          0     688936
+crime_r~1991 |      2,868    3260.899    2221.354          0      20179
+-------------+---------------------------------------------------------
+pop_2~m_1990 |      3,120    50408.74    166987.3         75    5481222
+pop_2~s_1990 |      3,120    37970.21    124881.2         42    3836856
+pop_2~l_1990 |      3,120    10258.83    40444.49          3    1222313
+density~1990 |      3,120    217.1734    1439.545   .0539584   53126.29
+areanam~2000 |          0
+-------------+---------------------------------------------------------
+pop_2~m_2000 |      3,120    57654.62    184667.7         51    5882948
+land_ar~2000 |      3,120    1051.262     3107.11          2     145900
+tot_pop_2000 |      3,120     89320.4    290806.7         67    9519338
+hispani~2000 |      3,120     10893.8    93794.34          1    4242213
+white_p~2000 |      3,120     67185.5    176726.3         60    4637062
+-------------+---------------------------------------------------------
+black_p~2000 |      3,120    10914.91    52897.17          0    1405361
+serious~1999 |      2,679    3896.901    14945.95          0     362967
+crime_r~1999 |      2,654    2895.921    1841.649         28      20965
+density~2000 |      3,120    241.2187    1669.075   .0449006   66834.56
+pop_2~s_2000 |      3,120    46393.71    142715.6         44    4112424
+-------------+---------------------------------------------------------
+pop_2~l_2000 |      3,120     14022.5    52098.95          3    1464854
+
+
+
+
+(note: file ../output/county_panel.dta not found)
+file ../output/county_panel.dta saved
+
+. 
+end of do-file
+
+ make.py ended: 2016-06-27 20:25:14
