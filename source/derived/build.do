@@ -13,7 +13,7 @@ program main
 end
 
 program prepare_data_1970
-    use "../external/raw_databooks/1947-1977/07736-0001-Data.dta", clear
+    use "../raw_databooks/1947-1977/07736-0001-Data.dta", clear
 	
     rename FIPSTATE fipstate
     rename FIPSCNTY fipscnty
@@ -351,7 +351,7 @@ program prepare_data_2000
 		serious_crimes_1990 crime_rate_1999_f crime_rate_1999
 	save_data "../temp/cleaned_2000_cc00_tab_B6.dta", key(id) replace
 
-    import excel "../external/raw_databooks/2007/cc07_tabB4.xls", cellrange(A9:M3208) clear
+    import excel "/raw_databooks/2007/cc07_tabB4.xls", cellrange(A9:M3208) clear
     rename A areaname_2000
 	rename D pop_25_om_2000
 	rename E pop_25_om_hs_pct_2000
@@ -391,7 +391,7 @@ program prepare_data_2000
     drop if areaname_2000 == "SouthBoston,VA" | areaname_2000 == "YellowstoneNationalPark,MT"
 	sort areaname_2000 id
 	drop if areaname_2000 == areaname_2000[_n-1]
-	save_data "../temp/cleaned_2000_cc07_tabB1.dta",key(id areaname_2000) replace
+	save_data "../../temp/cleaned_2000_cc07_tabB1.dta",key(id areaname_2000) replace
 
 	/*
 	Before merging all dta for 2000 we need to merge by areaname the 2 datasets
@@ -448,7 +448,7 @@ program prepare_data_2000
 	    violent_crimes_1999 violent_crimes_1999_f property_crimes_1999 property_crimes_1999_f pop_25_om_hs_pct_2000     ///
         pop_25_om_coll_pct_2000
 	
-    save_data "../temp/cleaned_2000.dta", key(fipstate fipscnty) replace
+    save_data "../../temp/cleaned_2000.dta", key(fipstate fipscnty) replace
 end
 
 program merge_files
@@ -462,7 +462,7 @@ program merge_files
 	* Inconsistent data across 2000 and 2007 (for instance perc of 25_om_hs and 25_om_coll or share_black)
 	drop if areaname_2000 == "Richmond,VA" | areaname_2000 == "Suffolk,VA"
 	
-    save_data "../output/county_panel.dta", key(fipstate fipscnty) replace
+    save_data "../../output_large/derived/county_panel.dta", key(fipstate fipscnty) replace
 end
 
 * EXECUTE

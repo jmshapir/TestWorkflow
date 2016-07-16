@@ -1,2 +1,6 @@
 ../output_local/* filter=lfs diff=lfs merge=lfs -text
 ../output_local/ filter=lfs diff=lfs merge=lfs -text
+output_large/county_panel.dta filter=lfs diff=lfs merge=lfs -text
+output_large filter=lfs diff=lfs merge=lfs -text
+output_large/* filter=lfs diff=lfs merge=lfs -text
+output_large/** filter=lfs diff=lfs merge=lfs -text

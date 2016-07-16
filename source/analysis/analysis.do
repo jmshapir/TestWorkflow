@@ -24,7 +24,7 @@ program main
 end
 
 program summary_stat
-    use "../external/county_panel.dta", clear
+    use "../../output_large/county_panel.dta", clear
     
 	local var_of_interest land_area* density_pop* tot_pop* white_pop* black_pop*   ///
 	    hispanic_pop* pop_25_om* *crime*
@@ -359,7 +359,7 @@ end
 
 program reshape_data
     
-	use "../external/county_panel.dta", clear
+	use "../../output_large/county_panel.dta", clear
 	
 	drop tot_pop_1970b areaname_1970 areaname_1990 areaname_2000
 	rename tot_pop_1970a tot_pop_1970
