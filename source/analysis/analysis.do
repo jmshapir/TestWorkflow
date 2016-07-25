@@ -1,7 +1,7 @@
 clear
 version 12
 set more off
-adopath + ../input/lib/stata/gslab_misc/ado
+adopath + ../../source/lib/stata/gslab_misc/ado
 preliminaries
 
 program main
@@ -24,14 +24,14 @@ program main
 end
 
 program summary_stat
-    use "../../output_large/county_panel.dta", clear
+    use "../../output_large/derived/county_panel.dta", clear
     
 	local var_of_interest land_area* density_pop* tot_pop* white_pop* black_pop*   ///
 	    hispanic_pop* pop_25_om* *crime*
 	
     tabstat `var_of_interest', stat(n mean median sd min max) col(stat) varwidth(16) format(%9.0f)
     sutex `var_of_interest', nobs minmax title("Descriptive Statistics")           ///
-	    key(desc_stat_tab_1) file("../output/desc_stat_tab.tex") replace
+	    key(desc_stat_tab_1) file("../output/analysis/desc_stat_tab.tex") replace
 end
 
 program gen_shares
@@ -83,7 +83,7 @@ program k_densities
 	        title("Density of `xtitle' by County") subtitle(if total population is less than 500.000)     ///
 	        legend(order(1 "1970" 2 "1980" 3 "1990" 4 "2000") pos(6) rows(1))                             ///
 	        xlabel(25000 "25k" 100000 "100k" 200000 "200k" 300000 "300k" 400000 "400k" 500000 "500k")                                                                        
-	    graph export "../output/density_`x'.pdf", replace
+	    graph export "../output_large/analysis/density_`x'.pdf", replace
 		scalar count = count + 1
     }
 	
@@ -95,7 +95,7 @@ program k_densities
 	    title("Density of Serious Crime Rate (per 100k ppl) by County")       ///
 		subtitle(if total population is less than 500.000)                    ///
         legend(order(1 "1970" 2 "1980" 3 "1990" 4 "2000") pos(6) rows(1))      
-    graph export "../output/density_s_crime_rate.pdf", replace
+    graph export "../output_large/analysis/density_s_crime_rate.pdf", replace
 
     twoway kdensity crime_rate_1975 if tot_pop_1970 < 500000 ||                ///
 	    kdensity crime_rate_1981 if tot_pop_1980 < 500000 ||                   ///
@@ -106,7 +106,7 @@ program k_densities
 		subtitle(if total population is less than 500.000)                     ///
         legend(order(1 "1970" 2 "1980" 3 "1990" 4 "2000") pos(6) rows(1))      ///
 	    xlabel(1000 "1k" 5000 "5k" 10000 "10k" 20000 "20k" 30000 "30k")                                                                                                              
-    graph export "../output/density_crime_rate.pdf", replace
+    graph export "../output_large/analysis/density_crime_rate.pdf", replace
 
 	scalar count = 1
 	foreach x in white_share black_share hispanic_share pop_25_om_share       ///
@@ -136,7 +136,7 @@ program k_densities
 	        , xtitle("`xtitle'") ytitle("Density function")                    ///
 	        title("Density of `xtitle' by County")                             ///
 	        legend(order(1 "1970" 2 "1980" 3 "1990" 4 "2000") pos(6) rows(1))  
-	    graph export "../output/density_`x'.pdf", replace
+	    graph export "../output_large/analysis/density_`x'.pdf", replace
 		scalar count = count + 1
     }
 end
@@ -164,7 +164,7 @@ program box_plots
         title("Total Population by County & by Year") ylabel(1000000 "1M"   ///
         2000000 "2M" 3000000 "3M" 4000000 "4M" 5000000 "5M" 6000000 "6M"    ///
         7000000 "7M" 8000000 "8M" 9000000 "9M" 10000000 "10M")
-    graph export "../output/box_tot_pop.pdf", replace
+    graph export "../output_large/analysis/box_tot_pop.pdf", replace
     
 	scalar count = 1
 	foreach x in white black hispanic pop_25_om pop_25_om_hs pop_25_om_coll{
@@ -188,7 +188,7 @@ program box_plots
 		}     	    
         graph hbox `x'_share_1970 `x'_share_1980 `x'_share_1990 `x'_share_2000,     ///
             title("`title' by County & by Year")
-        graph export "../output/box_`x'.pdf", replace
+        graph export "../output_large/analysis/box_`x'.pdf", replace
 		scalar count = count + 1
     }
 	
@@ -202,7 +202,7 @@ program box_plots
 		}	    
         graph hbox `x'_1975 `x'_1981 `x'_1991 `x'_1999,                           ///
             title("`title' by County & by Year") subtitle(Per 100.000 Population) 
-        graph export "../output/box_`x'.pdf", replace
+        graph export "../output_large/analysis/box_`x'.pdf", replace
 		scalar count = count + 1
     }
 	
@@ -330,10 +330,10 @@ program avg_percentile_plots
 	    label var stat_`x'8 "99th percentile"
 	    tsline stat_`x'2 stat_`x'3 stat_`x'4 stat_`x'5 stat_`x'6 stat_`x'7 stat_`x'8,      ///
 	        title("Percentiles of `x' shares") subtitle(Average percentiles across States) 
-        graph export "../output/percentile_`x'_share.pdf", replace
+        graph export "../output_large/analysis/percentile_`x'_share.pdf", replace
 		tsline stat_`x'4 stat_`x'5 stat_`x'6,                                              ///
 	        title("Percentiles of `x' shares") subtitle(Average percentiles across States) 
-        graph export "../output/percentile_`x'_share_2.pdf", replace
+        graph export "../output_large/analysis/percentile_`x'_share_2.pdf", replace
 		restore
 	}
 	    keep stat_crime_rate*
@@ -350,10 +350,10 @@ program avg_percentile_plots
 	    tsline `r(varlist)',                                                                ///
 		    title("Percentiles of crime rate") subtitle(Average percentiles across States)  ///
 			ylabel(2000 "2k" 4000 "4k" 6000 "6k" 8000 "8k" 10000 "10k") 
-        graph export "../output/percentile_crime_rate.pdf", replace
+        graph export "../output_large/analysis/percentile_crime_rate.pdf", replace
 		tsline stat_crime_rate4 stat_crime_rate5 stat_crime_rate6,                          ///
 	        title("Percentiles of crime rate") subtitle(Average percentiles across States)  
-        graph export "../output/percentile_crime_rate_2.pdf", replace
+        graph export "../output_large/analysis/percentile_crime_rate_2.pdf", replace
 
 end
 
@@ -405,7 +405,7 @@ program gen_shares_resheped_data
 	gen id = fipstate + fipscnty
 	destring id, replace
 	xtset id year
-	save_data "../temp/reshaped.dta", key(fipstate fipscnty year) replace
+	save_data "../../temp/reshaped.dta", key(fipstate fipscnty year) replace
 
 end
 
@@ -413,7 +413,7 @@ program graph_trends
     
     scalar count = 1
     foreach x in tot_pop white_pop black_pop hispanic_pop pop_25_om crime_rate s_crime_rate{
-	    use "../temp/reshaped.dta", clear
+	    use "../../temp/reshaped.dta", clear
 	    collapse (mean) `x', by(year)
 		if count == 1{
 	        local title "Total Population"
@@ -439,14 +439,14 @@ program graph_trends
 		tsline `x', title("Evolution of `title'")          ///
 		legend(order(1 "1970" 2 "1980" 3 "1990" 4 "2000")  ///
 		pos(6) rows(1)) ytitle("`title'")
-	    graph export "../output/evolution_`x'.pdf", replace
+	    graph export "../output_large/analysis/evolution_`x'.pdf", replace
 		scalar count = count + 1
 	}	
 end
 
 program scatter_plots
     
-	use "../temp/reshaped.dta", clear
+	use "../../temp/reshaped.dta", clear
 	scalar count = 1
     foreach x in crime_rate s_crime_rate{
         if count == 1{
@@ -474,7 +474,7 @@ program scatter_plots
 				    subtitle(if Crime Rate is less than 10k & Serious Crime Rate is less than 2)                      ///
 				    legend(order(1 "Counties" 2 "95% interval" 3 "Fitted values") pos(6) rows(1)) ytitle("`ytitle'")  ///
 					ylabel(0 "0" 5000 "5000" 10000 "10000")
-			    graph export "../output/scatter_`x'_`y'.pdf", replace
+			    graph export "../output_large/analysis/scatter_`x'_`y'.pdf", replace
 			    scalar count_2 = count_2 + 1
 			}
 			else{
@@ -483,7 +483,7 @@ program scatter_plots
 				    title("Scatter & Prediction using Squared Term of `title'")                                       ///
 				    subtitle(if Crime Rate is less than 10k & Serious Crime Rate is less than 2)                      ///
 				    legend(order(1 "Counties" 2 "95% interval" 3 "Fitted values") pos(6) rows(1)) ytitle("`ytitle'")
-			    graph export "../output/scatter_`x'_`y'.pdf", replace
+			    graph export "../output_large/analysis/scatter_`x'_`y'.pdf", replace
 			    scalar count_2 = count_2 + 1
 			}   
 	    }
@@ -506,17 +506,17 @@ program xt_reg
 		        local appendreplace "append"
             }
 		    xtreg `x' `y' `y'_2 `controls' i.year, fe
-            outreg2 using "../output/reg_`x'.tex", `appendreplace' label bdec(3) sdec(3) rdec(3)   ///
+            outreg2 using "../output/analysis/reg_`x'.tex", `appendreplace' label bdec(3) sdec(3) rdec(3)   ///
                 symbol(***,**,*) alpha(0.01,0.05,0.1) keep(`x' `y' `y'_2 `controls')
 		
 		    local appendreplace "append"
 		
 		    xtreg `x' `y' `y'_2 `controls' i.year, vce(r) fe
-            outreg2 using "../output/reg_`x'.tex", `appendreplace' label bdec(3) sdec(3) rdec(3)   ///
+            outreg2 using "../output/analysis/reg_`x'.tex", `appendreplace' label bdec(3) sdec(3) rdec(3)   ///
                 symbol(***,**,*) alpha(0.01,0.05,0.1) keep(`x' `y' `y'_2 `controls')
 		
 		    xtreg `x' `y' `y'_2 `controls_2' i.year, vce(r) fe
-            outreg2 using "../output/reg_`x'.tex", `appendreplace' label bdec(3) sdec(3) rdec(3)   ///
+            outreg2 using "../output/analysis/reg_`x'.tex", `appendreplace' label bdec(3) sdec(3) rdec(3)   ///
                 symbol(***,**,*) alpha(0.01,0.05,0.1) keep(`x' `y' `y'_2 `controls_2')
 		
             scalar count = count + 1
@@ -559,20 +559,20 @@ program quartiles_analysis
 	foreach x in pct_hispanic_70_00 pct_black_70_00 pct_hispanic_80_00 pct_black_80_00{
 	    preserve
 	    collapse (mean) white_share black_share hispanic_share crime_rate, by(`x' year)
-	    save_data "../temp/collapse_`x'.dta", key(`x' year) replace
+	    save_data "../../temp/collapse_`x'.dta", key(`x' year) replace
 		restore
 	}
 
 	foreach x in pct_hispanic_70_00 pct_black_70_00 pct_hispanic_80_00 pct_black_80_00{
 	    preserve
 	    collapse (mean) white_share black_share hispanic_share crime_rate, by(`x' pct_density_pop year)
-	    save_data "../temp/collapse_`x'_and_density.dta", key(`x' pct_density_pop year) replace		
+	    save_data "../../temp/collapse_`x'_and_density.dta", key(`x' pct_density_pop year) replace		
 		restore
 	}
 	
 	scalar count = 1
 	foreach x in hispanic_70_00 hispanic_80_00 black_70_00 black_80_00{
-		use "../temp/collapse_pct_`x'.dta", clear
+		use "../../temp/collapse_pct_`x'.dta", clear
 	    xtset pct_`x' year
 		if count == 1{
 			local subtitle "diff hisp shares (1970-2000)"
@@ -607,7 +607,7 @@ program quartiles_analysis
 	            tsline `y' if pct_`x' == 4                                                          ///
 	            , title("`title'") subtitle(Counties grouped by state & by quartiles in `subtitle') ///
 				legend(order(1 "Q1" 2 "Q2" 3 "Q3" 4 "Q4") pos(6) rows(1)) ytitle("`title'")
-            graph export "../output/`y'_`x'.pdf", replace
+            graph export "../output_large/analysis/`y'_`x'.pdf", replace
 			scalar count_2 = count_2 + 1
 	    }
 		scalar count =count + 1
@@ -615,7 +615,7 @@ program quartiles_analysis
 	
 	scalar count = 1
 	foreach x in hispanic_70_00 hispanic_80_00 black_70_00 black_80_00{
-		use "../temp/collapse_pct_`x'_and_density.dta", clear
+		use "../../temp/collapse_pct_`x'_and_density.dta", clear
 		egen group_`x' = group(pct_`x' pct_density_pop)
 	    xtset group_`x' year
 		if count == 1{
@@ -657,7 +657,7 @@ program quartiles_analysis
 	                , title("`title': Pop Density Q`z'") subtitle(Counties grouped by state & by quartiles in `subtitle') ///
 				    legend(order(1 "Q1 in `legend'" 2 "Q2 in `legend'" 3 "Q3 in `legend'" 4 "Q4 in `legend'")             ///
 					pos(6) rows(2)) ytitle("`title'")
-                graph export "../output/`y'_`x'_`z'.pdf", replace
+                graph export "../output_large/analysis/`y'_`x'_`z'.pdf", replace
 				}
 			scalar count_2 = count_2 + 1
 	    }
@@ -668,7 +668,7 @@ end
 
 program diff_in_diff
     
-	use "../temp/reshaped.dta", clear
+	use "../../temp/reshaped.dta", clear
 	foreach x in white_share black_share hispanic_share s_crime_rate crime_rate{
         gen diff_`x' = `x' - `x'[_n - 1] if id == id[_n - 1]
     }
@@ -774,7 +774,7 @@ program diff_in_diff
 	local high_diff high_diff*
 	egen high_diff = rowtotal(`high_diff')
 	keep if high_diff >= 1
-	save_data "../temp/high_diff_share_minorities.dta", key(fipstate fipscnty year) replace
+	save_data "../../temp/high_diff_share_minorities.dta", key(fipstate fipscnty year) replace
 	restore
 	
 	* Select counties with almost no diff in hispanic or black shares (CONTROLS)
@@ -812,7 +812,7 @@ program diff_in_diff
 	local no_diff no*
 	egen no_diff = rowtotal(`no_diff')
 	keep if no_diff == 1
-	save_data "../temp/no_diff_share_minorities.dta", key(fipstate fipscnty year) replace
+	save_data "../../temp/no_diff_share_minorities.dta", key(fipstate fipscnty year) replace
 	restore
 	
     * Select counties with high reduction in hispanic or black shares (TREATMENTS)
@@ -867,15 +867,15 @@ program diff_in_diff
 	local high_red high_red*
 	egen high_red = rowtotal(`high_red')
 	keep if high_red == 1
-	save_data "../temp/high_red_share_minorities.dta", key(fipstate fipscnty year) replace
+	save_data "../../temp/high_red_share_minorities.dta", key(fipstate fipscnty year) replace
 	restore
     
 	scalar count = 1
 	foreach z in diff red{
-	    use "../temp/high_`z'_share_minorities.dta", clear
-	    merge 1:1 fipstate fipscnty year using "../temp/no_diff_share_minorities.dta", ///
+	    use "../../temp/high_`z'_share_minorities.dta", clear
+	    merge 1:1 fipstate fipscnty year using "../../temp/no_diff_share_minorities.dta", ///
             assert(1 2) keep(1 2)
-	    save_data "../temp/merge_`z'_share_minorities.dta", key(fipstate fipscnty year) replace
+	    save_data "../../temp/merge_`z'_share_minorities.dta", key(fipstate fipscnty year) replace
 		
 	    egen group = group(fipstate year)
 	    scalar count_2 = 1
@@ -912,7 +912,7 @@ program diff_in_diff
 	        rename diff_hispanic_share diff_hispanic
 	        list areaname year treated_`x' density_pop group diff_white diff_black diff_hispanic diff_crime_rate, sepby(group) abb(21)
 		    texsave areaname year treated_`x' density_pop group diff_white diff_black diff_hispanic diff_crime_rate     ///
-		        using "../output/list_`z'_`x'.tex", title(Pairs of Counties to Apply Diff-in-Diff)                      ///
+		        using "../output/analysis/list_`z'_`x'.tex", title(Pairs of Counties to Apply Diff-in-Diff)                      ///
 			    footnote("Check, if needed, the algorithm used to pick these pairs of counties") replace
 		    restore
 		    scalar count_2 = count_2 + 1
