@@ -4,3 +4,5 @@ output_large/county_panel.dta filter=lfs diff=lfs merge=lfs -text
 output_large filter=lfs diff=lfs merge=lfs -text
 output_large/* filter=lfs diff=lfs merge=lfs -text
 output_large/** filter=lfs diff=lfs merge=lfs -text
+output/drafts/* filter=lfs diff=lfs merge=lfs -text
+output_large/analysis/* filter=lfs diff=lfs merge=lfs -text
