@@ -1,0 +1,23 @@
+
+Import('env')
+
+
+#------------------------------#
+# Make
+#------------------------------#
+
+execfile('derived/make.py')
+execfile('analysis/make.py')
+
+
+#------------------------------#
+# TeX compilation
+#------------------------------#
+
+# target and source:
+pdf_output = env.PDF(target='../output/drafts/Report.pdf', source='drafts/Report.tex')
+# make sure that the pdf is reloaded properly (e.g., in Skim)
+env.Precious(pdf_output)
+
+
+
