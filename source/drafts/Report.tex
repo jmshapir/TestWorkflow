@@ -1,0 +1,620 @@
+\documentclass[a4paper,12pt]{article}  
+\usepackage{geometry}
+\geometry{papersize={21cm,29.7cm},text={17cm,24.7cm},centering,dvips=false, left=2.5cm,top=2.5cm,right=2.5cm,bottom=2.5cm}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{natbib}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usetikzlibrary{shapes,shadows,arrows}
+\usepackage{lscape}
+\usepackage{amssymb}
+\usepackage{setspace}
+\usepackage{rotating}
+\usepackage{dcolumn}
+\usepackage{amsmath}
+\usepackage{caption}
+\captionsetup[figure]{labelformat=empty}
+\captionsetup[table]{labelformat=empty}
+\usepackage{float}
+\usepackage{tablefootnote}
+\usetikzlibrary{calc}
+\usetikzlibrary{decorations.pathreplacing}
+\usepackage{multirow}
+\usepackage{booktabs}
+
+\usepackage{latexsym}
+\usepackage{tabularx}
+\usepackage{floatrow}
+\usepackage{threeparttable}
+\usepackage{subcaption}
+\usepackage{epstopdf}
+\usepackage{enumerate}
+\usepackage{pdflscape}
+\usepackage{enumitem}
+\usepackage{csvsimple}
+\usepackage{longtable}
+
+\makeatletter
+\setlength{\@fptop}{0pt}
+\makeatother
+\usepackage[justification=centering]{caption}
+\begin{document}
+\title{Report on Correlation between Ethnicity Groups and Crimes in the US\footnote{This analysis studies only the correlation between crimes and ethnicity minorities. For the time being we are not in possess of any other variable that can be useful for this study, as for instance pollution at the county level.}}
+\author{Francesco Maria Esposito\footnote{email: francescomaria\_esposito@brown.edu}}
+\maketitle
+\noindent
+Notice: The aim of this report is only to give a brief introductory description of the data on hand and to illustrate the preliminary results obtained from a quick and not exhaustive analysis. If needed, the reader can also refer to the build and analysis do files residing in Francesco\_Yusheng folder. They can be useful to understand what we have been doing in exact detail. Please do not circulate.
+\newpage
+\tableofcontents
+\listoftables
+\listoffigures
+\newpage
+\section{Data}
+
+\\The only data source used in this analysis is US County and City Data Books. For each county\footnote{Notice that its name is never enough to identify the county. Indeed, there are more counties with the same name and sometime they also belong to the same State.} we obtained measures of their land area (sq mi), total population, total population of whites, blacks, hispanics\footnote{Please notice that people with hispanic origins may be of any race. In other words, being hispanic does not exclude the possibility of being either black or white.}, over 25, over 25 with high school degree and over 25 with college degree. All these variables correspond to four survey years or periods: 1947-1977, 1983, 1994, 2000. Moreover, from the same source, we also obtained some crime related variables such as serious crimes\footnote{Number of serious crimes.} and crime rate\footnote{Number of crimes every 100.000 people.} for the following years: 1975, 1981, 1991 and 1999.\footnote{For some periods more crime related variables have been identified and extracted. However, since these variables were not present for all the years that are object of this study, we decided to drop them later on. For instance, for the year 1970 we have variables measuring: robberies, agg. assaults, burglaries and auto thefts.} These are the only data on crime which are available from this source. We decided to assign crimes committed in 1975 as if they occurred in 1970, crimes in 1981 as if they occurred in 1980 and so on. Notice also that variables relative to crimes have few missing values for the years object of this study. Instead, more importantly, for the purpose of the analysis we will carry out later on, notice that hispanic population have many missing values for the year 1970.
+\\Furthermore, we should mention that we also obtained all \textit{flag} variables when existing in the raw data\footnote{For the year 2000 we are not in possess of any \textit{flag} variables.}. These variables specify if data are present; data are not available; footnotes are appended to the item; data rounds to zero; data are suppressed for confidentiality purposes; data are omitted for Negro or Spanish heritage populations less than 400; or no data available (geo. unit not inc. at time).\footnote{More detailed descriptions of \testit{flag} variables are at page 8 of the pdf named "07736-0001-Codebook" which resides in raw\_county\and\_city\_data\_book/docs/1947-1977.} This is the main reason why we have many missing values for hispanic population in 1970\footnote{Alternatively, we could have approximated all these values to zeros and avoid the problem of having so many missing values}.
+\\Finally, one issue that deserve to be mentioned, discussed and analyzed in more detail is how counties have modified their size across decades. This is because sometime some counties are either merged with others or are eliminated or face some kind of change in their boundaries. These changes in counties dimensions are usually endogenous and often also really small and not significant. Because of these changes, we have not been able to keep all the observations that were originally part of the raw data. Indeed, few counties were not observable in some years, i.e. we did not have a perfectly balanced panel dataset.\footnote{We decided to drop all these observations since they are only few.} Moreover, some of the raw data for the year 2000 specify only the names of the county-state they refer to. Unfortunately, five observations were double, i.e. it seems there are more counties in the same State that have the same name.\footnote{It may also be that data for these five counties have been updated later in time and that they kept record of the old data as well in the same file. However, we do not think this may be the case since values are really different from each other.} We decided to disregard this issue and these few observations.\footnote{The raw data we refer to resides in ../2007/cc07\_tabB4. One example is given by "Richmond, VA".}
+
+\section{Main Findings}
+
+\\This section aims at presenting the main findings of this preliminary analysis. Notice that, in order to make the understanding of the results easier, we splits this section in two subsections. In the first subsection we present some graphical analysis and some diff-in-diff evidences. In the second subsection, instead, more interestingly, we present more robust and reliable evidences from double fixed effect (by county and year) estimations.
+
+\subsection{Descriptive Analysis}
+Before entering the graphical analysis and before showing the diff-in-diff evidences, for sick of completeness, we show in a small table the basic summary statistics of our main variables of interest.\footnote{Remember that we have a panel dataset in which the observation unit is county-year.}
+
+\input{../../output_large/analysis/desc_stat_tab_3.tex}
+
+\subsubsection{Graphical Analysis}
+\\First of all, notice from these first graphs that all our variables of interest, crime rate excluded, are, on average, increasing over years. For instance, we observe that, on average, total population of counties increases, as well as white population, black population, hispanic population, over 25 population and serious crimes reported to police (this last variable increases for the first 3 decades and then decreases in 2000). Fig.\ref{evolution} shows all these trends over time. Then, we decided to plot, respectively in Fig.\ref{persistency}, in Fig.\ref{persistency2} and in Fig.\ref{persistency3}, some k-densities and box-and-whisker plots of our variables of interest. From the graphs it seems that there is also high persistence in population structure across decades. However, it does not necessarily imply that there is almost no variation across counties and across years. Indeed, we know that the variation is very little in the distribution of these variables, but this does not mean that there is no variation between counties. For instance, take total population. It is evident that the number of counties with total population of x or y does not change a lot across years. However, it may be that the population of county A moves to county B and population of county B moves to county A, i.e. we do observe only little variation in aggregate but there may still be some variation between counties that can be exploited. In other words, it may be that what we observe in our data is a sort of cross migration across counties.
+\\Notice also that, on average, education and percentage of older people are increasing over time. At the same time it seems also that these percentages increase their variance across periods. Not everyone gets more education.
+
+\begin{figure}[hp!]
+\caption{Fig.\ref{evolution} Evolution of Population Structure and Crimes}
+\subfloat {\includegraphics[width = 0.32\paperwidth]{../../output_large/analysis/evolution_tot_pop.pdf}}
+\subfloat {\includegraphics[width = 0.32\paperwidth]{../../output_large/analysis/evolution_white_pop.pdf}}
+\subfloat {\includegraphics[width = 0.32\paperwidth]{../../output_large/analysis/evolution_black_pop.pdf}}
+\subfloat {\includegraphics[width = 0.32\paperwidth]{../../output_large/analysis/evolution_hispanic_pop.pdf}}
+\subfloat {\includegraphics[width = 0.32\paperwidth]{../../output_large/analysis/evolution_pop_25_om.pdf}}
+\subfloat {\includegraphics[width = 0.32\paperwidth]{../../output_large/analysis/evolution_crime_rate.pdf}}
+\subfloat {\includegraphics[width = 0.32\paperwidth]{../../output_large/analysis/evolution_s_crime_rate.pdf}}
+\label{evolution}
+\end{figure}
+
+\begin{figure}[hp!]
+\caption{Fig.\ref{persistency} K-Densities of Variables across Decades}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/density_tot_pop.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/density_crime_rate.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/density_white_share.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/density_black_share.pdf}} 
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/density_hispanic_share.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/density_pop_25_om_share.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/density_pop_25_om_coll_share.pdf}}
+\hspace*{.2in}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/density_pop_25_om_hs_share.pdf}}
+\label{persistency}
+\end{figure}
+
+\begin{figure}[H]
+\caption{Fig.\ref{persistency2} Persistency of Variables across Decades - Box Plots}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/box_tot_pop.pdf}} 
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/box_white.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/box_black.pdf}} 
+\hspace*{.2in}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/box_hispanic.pdf}}
+\label{persistency2}
+\end{figure}
+
+\begin{figure}[H]
+\caption{Fig.\ref{persistency3} Persistency of Variables across Decades - Box Plots}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/box_pop_25_om.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/box_pop_25_om_coll.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/box_pop_25_om_hs.pdf}} 
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/box_s_crime_rate.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/box_crime_rate.pdf}}
+\label{persistency3}
+\end{figure}
+
+\noindent
+Now, in order to start our understanding of the relationship between population structure and crimes, we present scatter plots in Fig.\ref{scatters}. We have also computed many correlation coefficients which we do not present in this report for brevity reasons and because they do not give any significant additional useful info compared to the scatter plots. Indeed, here we prefer to present scatter plots for all the variables we are more interested in. It is already evident from these few graphs that something interesting is going on. More in particular, it seems that there is a relationship between population structure and crime rate and that this relationship can be approximated by concave functions, i.e. inverse u shaped functions.\footnote{The effect seems to be weaker when we use serious crime rate instead of crime rate.} Indeed, we have also calculated the prediction for crime rate from a regression of crime rate on shares and squared shares. In Fig.\ref{scatters} we have also plotted the resulting lines along with confidence intervals.\footnote{The stata command used is \textit{qfitci}.} Notice that the underlying relationship does not change much even if we plot the same graphs by year. The interpretation of these results is straightforward. People belonging to ethnicity minority groups commit fewer and less relevant crimes when they are small because they have no support or help. Moreover, they commit fewer crimes also if shares are large enough maybe because these people feel more integrated in the community. Indeed, the crime rate is higher when ethnicity minorities are neither too small nor too large.
+
+\begin{figure}[H]
+\caption{Fig.\ref{scatters} Scatter Plots Using Either Crime Rate or Serious Crime Rate}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/scatter_crime_rate_white_share.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/scatter_s_crime_rate_white_share.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/scatter_crime_rate_black_share.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/scatter_s_crime_rate_black_share.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/scatter_crime_rate_hispanic_share.pdf}} 
+\hspace*{.2in}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/scatter_s_crime_rate_hispanic_share.pdf}}
+\label{scatters}
+\end{figure}
+
+\noindent
+Finally, for the graphical analysis, we focus on some percentiles and quartiles behaviors.
+\\In Fig.\ref{avg_percentiles} we show the average percentiles across States. First we computed percentiles by State of our variables of interest and then we computed the average of these percentiles so to have the average percentile for each year. We can clearly observe their behavior over time from the graphs. These evidences in part confirm what was already observable from some basic summary statistics, i.e. crime rate increases first and then decreases (we observe the same behavior for all percentiles). Moreover, these graphs also suggest that there is basically no change of black share over time and that hispanic share is instead increasing at an increasing rate over time. 
+
+\begin{figure}[H]
+\caption{Fig.\ref{avg_percentiles} Average Percentiles of Black Share, Hispanic Share and Crime Rate}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/percentile_black_share.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/percentile_black_share_2.pdf}} 
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/percentile_hispanic_share.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/percentile_hispanic_share_2.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/percentile_crime_rate.pdf}}
+\hspace*{.2in}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/percentile_crime_rate_2.pdf}}
+\label{avg_percentiles}
+\end{figure}
+
+\noindent
+With Fig.\ref{quartiles}, Fig.\ref{quartiles_2}, Fig.\ref{quartiles_3} and Fig.\ref{quartiles_4} we end the graphical analysis. We first group counties by State and by quartiles of the difference between either black share or hispanic share in 2000 and in 1970. Then we take averages over these groups and in the figures we show quartiles evolution over time. In Fig.\ref{quartiles} we use quartiles of the difference between either black share or hispanic share in 2000 and in 1980. In Fig.\ref{quartiles_2} we repeat the exact same analysis but we use quartiles of the difference between either black share or hispanic share in 2000 and in 1980 (instead of 1970). This is basically a robustness check since, as mentioned in the previous section of this report, we have many missing values for hispanic share in 1970 (most likely because hispanic were really few at that time). Finally, we group counties also by quartiles in population density. Indeed, in Fig.\ref{quartiles_3}, we take the average of hispanic share by State, by quartiles of difference in hispanic shares (either between 2000 and 1970 or between 2000 and 1980) and by quartiles of population density. In Fig.\ref{quartiles_4}, instead, we repeat the same analysis as in Fig.\ref{quartiles_3} except that we take average of crime rate instead of hispanic share. However, the grouping procedure is the same. If interested, the reader can also refer to the Appendix of this report where we present more exhaustive plots for the quartiles analysis. More in particular, in the Appendix we present graphs similar to the ones showed in Fig.\ref{quartiles_3} and Fig.\ref{quartiles_4} but either for the other population shares, i.e. white shares and black shares or grouping counties according to quartiles in diff. of black share instead of grouping counties according to quartiles in diff. of hispanic share (beyond the usual grouping by State and population density which is constant across all graphs). The reader can also refer to the analysis do file to better understand how these graphs have been built. 
+
+\begin{figure}[H]
+\caption{Fig.\ref{quartiles} \textbf{Evolution of Population Shares and Crime Rate}: Counties Grouped by State and by Quartiles in Diff. of Ethnic Minorities (1970 - 2000). On the Left Counties Are Grouped by Quartiles in Diff. of Hispanic Shares - On the Right Counties Are Grouped by Quantiles in Diff. of Black Shares}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/white_share_hispanic_70_00.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/white_share_black_70_00.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/black_share_hispanic_70_00.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/black_share_black_70_00.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/hispanic_share_hispanic_70_00.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/hispanic_share_black_70_00.pdf}} 
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/crime_rate_hispanic_70_00.pdf}}
+\hspace*{.2in}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/crime_rate_black_70_00.pdf}}
+\label{quartiles}
+\end{figure}
+
+\begin{figure}[H]
+\caption{Fig.\ref{quartiles_2} \textbf{Evolution of Population Shares and Crime Rate}: Counties Grouped by State and by Quartiles in Diff. of Ethnic Minorities (1980 - 2000). On the Left Counties Are Grouped by Quartiles in Diff. of Hispanic Shares - On the Right Counties Are Grouped by Quantiles in Diff. of Black Shares}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/white_share_hispanic_80_00.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/white_share_black_80_00.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/black_share_hispanic_80_00.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/black_share_black_80_00.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/hispanic_share_hispanic_80_00.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/hispanic_share_black_80_00.pdf}} 
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/crime_rate_hispanic_80_00.pdf}}
+\hspace*{.2in}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/crime_rate_black_80_00.pdf}}
+\label{quartiles_2}
+\end{figure}
+
+\begin{figure}[H]
+\caption{Fig.\ref{quartiles_3} \textbf{Evolution of Hispanic Shares}: Counties Grouped by State, by Quartiles in Diff. of Hispanic Shares and by Quartiles in Population Density. In Top Four Graphs Counties Are Grouped by Quartiles in Diff. of Hispanic Shares (1970 - 2000) - In Bottom Four Graphs Counties Are Grouped by Quartiles in Diff. of Hispanic Shares (1980 - 2000)}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/hispanic_share_hispanic_70_00_1.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/hispanic_share_hispanic_70_00_2.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/hispanic_share_hispanic_70_00_3.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/hispanic_share_hispanic_70_00_4.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/hispanic_share_hispanic_80_00_1.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/hispanic_share_hispanic_80_00_2.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/hispanic_share_hispanic_80_00_3.pdf}}
+\hspace*{.2in}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/hispanic_share_hispanic_80_00_4.pdf}}
+\label{quartiles_3}
+\end{figure}
+
+\begin{figure}[H]
+\caption{Fig.\ref{quartiles_4} \textbf{Evolution of Crime Rate}: Counties Grouped by State, by Quartiles in Diff. of Hispanic Shares and by Quartiles in Population Density. In Top Four Graphs Counties Are Grouped by Quartiles in Diff. of Hispanic Shares (1970 - 2000) - In Bottom Four Graphs Counties Are Grouped by Quartiles in Diff. of Hispanic Shares (1980 - 2000)}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/crime_rate_hispanic_70_00_1.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/crime_rate_hispanic_70_00_2.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/crime_rate_hispanic_70_00_3.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/crime_rate_hispanic_70_00_4.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/crime_rate_hispanic_80_00_1.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/crime_rate_hispanic_80_00_2.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/crime_rate_hispanic_80_00_3.pdf}}
+\hspace*{.2in}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/crime_rate_hispanic_80_00_4.pdf}}
+\label{quartiles_4}
+\end{figure}
+
+\noindent
+The main takeaways from all these graphs seem self-evident and easily observable to us. For instance, from the last two bottom-left plots in Fig.\ref{quartiles}, it is clear that the counties belonging to the fourth quartile for the difference in hispanic share are the ones who experience the more rapid percent increase in hispanic share over time. For the same group of counties the crime rate instead increases at the beginning, even if at a decreasing rate, but then in the last decade it decreases. Moreover, always from the same two panels of Fig.\ref{quartiles}, it is also clear that the average crime rate evolution for the counties belonging to the other quartiles (first, second and third) follow the exact same path, i.e. concave, even if the evolution of hispanic share is much less intense (trends across decades are much flatter).
+
+\subsubsection{Diff-in-Diff Evidences}
+In this subsection we decided to exploit a diff-in-diff strategy in order to check for the presence of some preliminary evidences in support of any correlation between ethnicity minorities and crimes. First of all, the main idea is to select pairs of counties belonging to the same State with similar population densities. Then, the remaining exercise consists in verifying if among these couples of counties there are some in which one county experienced for instance a significant growth of hispanic population (treatment) and the other county did not (control). Then, we check for the difference in crime rates within the couple of similar counties. In Fig.\ref{diff_in_diff} we show an example of the diff-in-diff strategy results. For instance, we consider the counties of Yell and Grant in Arkansas. In Tab.\ref{tab_diff_in_diff}, instead, we show the numerical result for this specific pair of counties.
+
+\begin{figure}[H]
+\centering
+\caption{Fig.\ref{diff_in_diff} Diff-in-Diff Effect of an Increase in Hispanic Share on Crime Rate}
+\begin{tikzpicture}[domain=1:12,scale=1,thick]
+\def\cint{1.2}      %donation-intercept for Control.
+\def\cslp{0.3}     %Slope for control.
+\def\tint{4.5}      %donation-intercept for treatment.
+\def\tslp{0.3}      %Slope for treatment.
+\def\tinttwo{6.5}      %donation-intercept for treatment2.
+\def\tslptwo{0.3}      %Slope for treatment2.
+\def\control{\x,{\cslp*\x+\cint}}
+\def\treatment{\x,{\tslp*\x+\tint}}
+\def\treatmenttwo{\x,{\tslptwo*\x+\tinttwo}}
+\coordinate (2010) at  (3,0);
+\coordinate (2012) at  (10,0);
+\coordinate (2010treatment) at  (3,\tint+\tslp*3);
+\coordinate (2012treatment) at  (10,\tinttwo+\tslptwo*10);
+\coordinate (2010control) at  (3,\cint+\cslp*3);
+\coordinate (2012control) at  (10,\cint+\cslp*10);
+\coordinate (jump1) at  (6.5,\tint+\tslp*6.5);
+\coordinate (jump2) at  (6.5,\tinttwo+\tslptwo*6.5);
+\draw[thick,color=blue] plot (\control) node[right] {Grant, AR};
+\draw[thick,color=purple] (1,\tint+\tslp*1) -- (6.5,\tint+\tslp*6.5);
+\draw[thick,color=purple] (6.5,\tinttwo+\tslptwo*6.5) -- (12,\tinttwo+\tslptwo*12) node[right] {Yell, AR};
+\draw[->] (0,0) -- (14,0) node[right] {$t$};
+\draw[->] (0,0) -- (0,11) node[above] {$crime\_rate$};
+\draw[dashed] (2010treatment) -- (2010) node[below] {$1990$};
+\draw[dashed] (2012treatment) -- (2012) node[below] {$2000$};
+\draw[dashed] (6.5,\tinttwo+\tslptwo*6.5) -- (6.5,\tint+\tslp*6.5);
+\draw[dashed] (3,\cint+\cslp*3) -- (0,\cint+\cslp*3) node[left] {$crime\_rate_{C1}$};
+\draw[dashed] (10,\cint+\cslp*10) -- (0,\cint+\cslp*10) node[left] {$crime\_rate_{C2}$};
+\draw[dashed] (3,\tint+\tslp*3) -- (0,\tint+\tslp*3) node[left] {$crime\_rate_{T1}$};
+\draw[dashed] (10,\tinttwo+\tslptwo*10) -- (0,\tinttwo+\tslptwo*10) node[left] {$crime\_rate_{T2}$};
+\draw [decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=0pt] (6.5,\tint+\tslp*6.5) -- (6.5,\tinttwo+\tslptwo*6.5) node [black,midway,xshift=-1.8cm] {\footnotesize Treatment effect};
+\fill (2010treatment) circle [radius=2pt];
+\fill (2012treatment) circle [radius=2pt];
+\fill (2010control) circle [radius=2pt];
+\fill (2012control) circle [radius=2pt];
+\fill (jump1) circle [radius=2pt];
+\fill (jump2) circle [radius=2pt];
+\end{tikzpicture}
+\label{diff_in_diff}
+\end{figure}
+
+\begin{table}[h]
+\setlength\belowcaptionskip{10pt}
+\begin{center}
+\caption {Tab. \ref{tab_diff_in_diff} Diff-in-Diff Effect of an Increase in Hispanic Share on Crime Rate - Treated County (Yell) Increases its Share of Hispanics of $11.73\%$ while Control County (Grant) Increases its Share of Hispanics only by $0.56$ between 1990 and 2000}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{ | l | c | c | c |}
+\hline
+ & 1990 & 2000 & 2000-1990 ($\Delta$) \\ \hline
+Yell, AR (T) & $2,551$ & $2,509$ & $-42$  \\ \hline
+Grant, AR (C) & $2,615$ & $1,008$ & $-1,607$ \\ \hline
+Treatment-Control & $-64$ & $1,501$ & \textbf{1,565} \\ \hline
+\end{tabular}
+\begin{tablenotes}
+\begin{footnotesize}
+Note: The two counties selected have really similar demographic characteristics. They belong to the same State and have close population densities. Please refer to Tab.\ref{tab_list_diff_hispanic}.
+\end{footnotesize}
+\end{tablenotes}
+\label{tab_diff_in_diff}
+\end{center}
+\end{table}
+
+\noindent
+In order to give a more complete idea of what we have on hands, in Tab.\ref{tab_list_diff_hispanic} and in Tab.\ref{tab_list_diff_black} we list respectively all groups of counties belonging to the same State for which at least one of them experiences either a particularly high increase in hispanic share or a particularly high increase in black share. Notice that all these counties are selected in such a way they all start in period $t-1$ predominantly white. Controls are those counties belonging to the same State of the treated ones but for which no big change in population structure occurred over time. Furthermore, notice also that population densities are shown in the tables. Hence, between counties belonging to the same group (State), we should pick treatments and controls such that population densities are as close as possible. In the two tables, the variables $treated\_hispanic$ and $treated\_black$ are dummies and specify whether the counties listed are considered either as treatments (if they experience an high increase in minorities share) or controls (if they do not experience any significant change in population structure). Finally, notice that the counties selected depend mainly on the algorithm used. For both $treated\_hispanic$ and $treated\_black$ we used really similar methodologies. We first selected counties that in period $t-1$ were predominantly white and that then experienced an uncommon growth in either hispanic or black share, respectively leaving unchanged the share of the remaining ethnicity minority. In other words, we admit only decreases in white share to compensate for the increase in either hispanic or black share. Finally, we define uncommon growths as growths which are larger than the national average growth plus one fifth of its standard deviation. Moreover, in order to be selected, these counties have to experience also an increase in crime rate which is uncommon as well. More in particular, the growth in crime rate has to be larger than the national average crime rate plus one hundredth of its standard deviation (since standard deviation of crime rate is relatively really large compared to its average, as already showed also in Tab.\ref{desc_stat_tab_3}). Hence, keep in mind that changing these parameters may change the size of the lists produced.\footnote{The reader can refer to the program diff\_in\_diff in the analysis do file in order to have a more detailed and complete vision on the algorithm used for listing these pairs of counties in this report.} 
+\\From both tables, Tab.\ref{tab_list_diff_hispanic} and Tab.\ref{tab_list_diff_black}, it is obvious that there are some evidences for a positive effect of ethnicity minorities on crime rate. However, you should also notice that the sizes of changes in shares are not always really large (especially for black shares in Tab.\ref{tab_list_diff_black}). As mentioned before, it depends purely on the method used to select these counties. Selecting counties with larger changes in ethnicity minorities would also reduce the number of counties we are able to list. Moreover, in our opinion, the counties listed in Tab.\ref{tab_list_diff_black} experience, on average, a smaller growth in black share (compared to the counties that experience uncommon growth in hispanic share) because black people are more than hispanic people all across US, because they have been here longer and because they are also more stable (black people do not migrate much across counties). This could be one of the reasons why, even if the growth in black shares are small, they could be considered as uncommon according to the method we used and explained few lines above.
+\\Furthermore, in order to make these evidences even more robust, we tried to find some effects working in the other direction. In other words, we looked for counties that started at time $t-1$ with a large share of either hispanic or black shares and that experienced an uncommon reduction during the following decade. Unfortunately, according to our algorithm, no pairs of counties have been selected for an uncommon reduction of hispanic shares. This may be because many hispanic people are still migrating to the US and few of them are migrating out of the US. However, we found some pairs of counties for uncommon reductions in black shares. In Tab.\ref{tab_list_red_black}, we show the pairs of selected counties, one of which experiences an uncommon reduction in black share over time.
+\\In conclusion, we would tend to not reject the hypothesis of the presence of a correlation between ethnicity minorities groups and crime rates. However, we would need to control for some other features, as for instance the number of people with college degrees and the number of police officers. For the time being we do not have many controls that we can exploit for this study. However, we have the number of people with college or high school degrees. We can then try to run several regressions controlling for that. Hence, we proceed with a fixed effect estimation in the next subsection.
+
+\begin{landscape}
+\begin{table}[tbp]
+\setlength\belowcaptionskip{10pt}
+\begin{center}
+\caption{Tab.\ref{tab_list_diff_hispanic} Pairs of Counties to Apply Diff-in-Diff - Increase in Hispanic\label{tab_list_diff_hispanic}}
+\renewcommand{\arraystretch}{1.5}
+\resizebox{\columnwidth}{!}{
+\begin{tabular}{lcccccccc}
+\hline
+areaname&year&treated\_hispanic&density\_pop&group&diff\_white&diff\_black&diff\_hispanic&diff\_crime\_rate \\ \hline
+YELL, AR&2000&1&22.77909&5&-10.06802&-.6225978&11.73335&-42 \\
+GRANT, AR&2000&0&26.05063&5&-1.175682&-.2369099&.5600613&-1607 \\ \hline
+MONTGOMERY, MO&2000&0&22.59963&35&-1.035057&-.5016274&.3782538&-736 \\
+SALINE, MO&2000&1&31.42328&35&-3.387169&-.3594537&3.535695&-126 \\
+CLINTON, MO&2000&0&45.29594&35&-.5745773&-.5072395&.2425395&-1417 \\
+PETTIS, MO&2000&1&57.52263&35&-3.778992&-.2553284&3.119068&1883 \\ \hline
+DICKSON, TN&2000&0&88.07347&62&-1.285172&-.3908157&.6166782&-740 \\
+WARREN, TN&2000&1&88.39723&62&-3.853073&-.2642412&4.088191&235 \\
+RHEA, TN&2000&0&89.87342&62&-1.412704&-.3443716&1.126786&-1044 \\
+ANDERSON, TN&2000&0&211.0355&62&-1.314964&-.1706004&.5450808&-1636 \\
+HAMBLEN, TN&2000&1&361.0435&62&-4.154198&-.4798846&5.328734&742 \\ \hline
+\multicolumn{9}{c}{Check, if needed, the algorithm used in the analysis do file to select pairs of counties} \\
+\end{tabular}
+}
+\end{center}
+\end{table}
+\end{landscape}
+
+
+\begin{landscape}
+\begin{small}
+\begin{center}
+\begin{longtable}{lcccccccc}
+\caption{Tab.\ref{tab_list_diff_black} Pairs of Counties to Apply Diff-in-Diff  - Increase in Black\label{tab_list_diff_black}}
+\hline
+areaname&year&treated\_black&density\_pop&group&diff\_white&diff\_black&diff\_hispanic&diff\_crime\_rate \\ \hline
+WINSTON, AL&1990&0&35.85854&1&.3716125&-.4020337&-.3975199&-396 \\
+MARION, AL&1990&1&40.20216&1&-.8041534&.7983756&-.4878007&91 \\ \hline
+RANDOLPH, AR&1990&0&25.39571&4&.2855301&-.6924461&.019307&-411 \\
+CRAIGHEAD, AR&1990&1&96.98453&4&-1.290871&.9863753&.0237157&2511 \\ \hline
+IZARD, AR&2000&1&22.80379&5&-2.730354&1.344821&.3790694&660 \\
+GRANT, AR&2000&0&26.05063&5&-1.175682&-.2369099&.5600613&-1607 \\ \hline
+HOWARD, IN&2000&1&289.9795&17&-3.584167&1.106228&.7037088&-113 \\
+JOHNSON, IN&2000&0&360.0281&17&-1.08522&-.1656986&.6693499&-656 \\
+HAMILTON, IN&2000&1&459.1457&17&-3.623444&.9149671&.9274452&308 \\ \hline
+ANDERSON, KS&1990&1&13.38422&20&-.7072983&.4211844&.0135216&997 \\
+DONIPHAN, KS&1990&0&20.75&20&.4841614&-.7810824&-.7909807&-97 \\
+MIAMI, KS&1990&0&40.66898&20&.1454544&-.4926219&-.040409&-569 \\
+CRAWFORD, KS&1990&1&59.97976&20&-1.337189&.3571655&.2675775&320 \\ \hline
+CUMBERLAND, KY&1990&0&22.16994&21&.2864838&-.5370688&-.9368622&-9 \\
+MENIFEE, KY&1990&1&24.96078&21&.1267242&.6727993&-.2514645&600 \\
+MORGAN, KY&1990&1&30.57218&21&-.8550949&.7758923&-.0938559&391 \\
+NICHOLAS, KY&1990&0&34.13705&21&.4137573&-.535798&-.4327539&-385 \\ \hline
+ALLEGANY, MD&1990&1&176.3435&24&-.5373459&.4155743&.0556741&383 \\
+CECIL, MD&1990&0&205.0201&24&.3099289&-.7012434&.163556&-83 \\ \hline
+ALLEGANY, MD&2000&1&176.3059&25&-4.320602&3.298182&.3364047&70 \\
+CECIL, MD&2000&0&246.9856&25&-1.145218&-.6308184&.6294541&-558 \\ \hline
+MONTGOMERY, MO&1990&0&21.06679&34&.3168106&-.6099319&-.0804259&-211 \\
+NODAWAY, MO&1990&1&24.75371&34&-.7442169&.4373276&.2126966&1052 \\
+CALLAWAY, MO&1990&0&39.10489&34&.6008377&-.5854111&.093318&-3089 \\
+JOHNSON, MO&1990&1&51.16005&34&-1.636246&.6828961&.0880245&1983 \\
+PETTIS, MO&1990&0&51.73285&34&.5383987&-.5415673&.1762508&-1749 \\ \hline
+IRON, MO&2000&1&19.41379&35&-2.386223&1.104352&.1693836&1801 \\
+LINN, MO&2000&0&22.18387&35&-.7896881&-.2176377&.0791541&-751 \\
+MONTGOMERY, MO&2000&0&22.59963&35&-1.035057&-.5016274&.3782538&-736 \\
+PIKE, MO&2000&1&27.26746&35&-5.696594&3.874211&.862348&223 \\
+CLINTON, MO&2000&0&45.29594&35&-.5745773&-.5072395&.2425395&-1417 \\
+CALLAWAY, MO&2000&1&48.58879&35&-2.502068&.8464241&.4035918&1791 \\ \hline
+WASHINGTON, NY&2000&0&73.10419&44&-.6032791&-.5327199&-.1947632&-578 \\
+SENECA, NY&2000&1&102.5908&44&-2.152351&.676164&.8987911&-368 \\ \hline
+HARDIN, OH&1990&0&66.19362&49&-.0130157&-.3447603&-.0107141&-862 \\
+UNION, OH&1990&1&73.15561&49&-1.960304&1.798177&.1621726&869 \\ \hline
+SCIOTO, OH&2000&0&129.4036&50&-1.294678&-.3287592&.2773889&-2358 \\
+COLUMBIANA, OH&2000&1&210.6673&50&-1.811371&.9007926&.7939238&-258 \\ \hline
+VENANGO, PA&1990&1&87.97186&55&-.3049469&.3636889&.0374555&83 \\
+ARMSTRONG, PA&1990&0&112.3517&55&.2805176&-.3715593&-.076413&-252 \\
+FRANKLIN, PA&1990&1&156.842&55&-1.008698&.5099366&.2204065&296 \\  \hline
+HUMPHREYS, TN&1990&0&29.68985&61&.373764&-.4721985&.0353836&-43 \\
+MORGAN, TN&1990&1&33.14176&61&-.4408646&.6705537&-.0747644&3168 \\
+HOUSTON, TN&1990&0&35.09&61&.8606796&-.8676109&-.0852684&-434 \\
+WHITE, TN&1990&0&53.28912&61&.1551056&-.3211551&-.3727011&-969 \\
+COFFEE, TN&1990&1&94.0303&61&-.9513855&.5140588&.2346023&2003 \\ \hline
+WAYNE, TN&2000&1&22.9455&62&-6.833572&5.815344&.4699692&102 \\
+HICKMAN, TN&2000&0&36.37031&62&-.779274&-.6014552&.5958345&-1034 \\ \hline
+WARREN, VA&1990&0&122.1589&66&.2538223&-.6521015&-.1173728&-1536 \\
+MONTGOMERY, VA&1990&1&190.4974&66&-3.635078&1.028669&.2667869&715 \\ \hline
+BLAND, VA&2000&1&19.13928&67&-1.235847&.6606731&.0972883&-190 \\
+ROCKBRIDGE, VA&2000&0&34.68&67&-.9130402&-.1628597&.2715242&-1169 \\
+GRAYSON, VA&2000&1&40.44469&67&-4.932312&3.806807&1.085273&279 \\
+BUCHANAN, VA&2000&1&53.52778&67&-2.52951&2.423295&-.3457608&59 \\
+BOTETOURT, VA&2000&0&56.16206&67&-.0996017&-.9669414&.0213374&-635 \\
+RUSSELL, VA&2000&1&63.80632&67&-2.681023&1.98287&.5168586&363 \\
+MONTGOMERY, VA&2000&0&215.5387&67&-1.972389&-.1906691&.5067126&-874 \\
+COLONIAL HEIGHTS, VA&2000&1&2413.857&67&-7.420593&5.464347&.6193486&1475 \\ \hline
+\multicolumn{9}{c}{Check, if needed, the algorithm used in the analysis do file to select pairs of counties} \\
+\end{longtable}
+\end{center}
+\end{small}
+\end{landscape}
+
+\begin{landscape}
+\begin{normalsize}
+\begin{center}
+\begin{longtable}{lcccccccc}
+\caption{Tab.\ref{tab_list_diff_black} Pairs of Counties to Apply Diff-in-Diff  - Reduction in Black\label{tab_list_red_black}}
+\hline
+areaname&year&treated\_black&density\_pop&group&diff\_white&diff\_black&diff\_hispanic&diff\_crime\_rate \\
+\midrule\addlinespace[1.5ex]
+UNION, FL&1990&1&42.71667&5&5.748894&-5.960619&.1100709&-220 \\
+SANTA ROSA, FL&1990&0&80.32284&5&.1530838&-.5736103&.2483597&-841 \\
+ST. JOHNS, FL&1990&1&137.6503&5&5.294914&-5.733182&-.8966024&-427 \\ \hline
+MONROE, GA&1990&1&43.21465&7&5.912304&-6.233391&.1913672&-1026 \\
+PICKENS, GA&1990&0&62.2069&7&.4573669&-.7945331&-.831281&-953 \\ \hline
+CECIL, MD&1990&0&205.0201&13&.3099289&-.7012434&.163556&-83 \\
+CALVERT, MD&1990&1&238.9395&13&5.814751&-6.481082&.1659383&-1126 \\ \hline
+HICKMAN, TN&2000&0&36.37031&32&-.779274&-.6014552&.5958345&-1034 \\
+FAYETTE, TN&2000&1&40.85957&32&6.903187&-8.244499&.5258796&-4259 \\
+HARDIN, TN&2000&0&44.25259&32&-.2527542&-.7144005&.6321041&-2228 \\ \hline
+NELSON, VA&1990&1&27.07203&35&4.078499&-5.064568&.2351633&-447 \\
+FLOYD, VA&1990&0&31.4267&35&.4631577&-.7675416&.0590482&-191 \\
+GRAYSON, VA&1990&0&36.74492&35&.1679764&-.3861105&.0867775&-75 \\
+LOUISA, VA&1990&1&40.81325&35&6.44416&-6.831221&-.6411452&-1152 \\
+BOTETOURT, VA&1990&0&46.02578&35&.0684204&-.3362231&.1080662&-177 \\
+WESTMORELAND, VA&1990&1&67.59825&35&4.960636&-5.024292&-.2228891&-139 \\
+WARREN, VA&1990&0&122.1589&35&.2538223&-.6521015&-.1173728&-1536 \\ \hline
+ROCKBRIDGE, VA&2000&0&34.68&36&-.9130402&-.1628597&.2715242&-1169 \\
+CHARLES CITY, VA&2000&1&37.847&36&7.009424&-8.329231&.2676817&-1605 \\
+KING WILLIAM, VA&2000&1&47.80363&36&6.449493&-7.517775&.3080419&-1418 \\
+BOTETOURT, VA&2000&0&56.16206&36&-.0996017&-.9669414&.0213374&-635 \\
+\multicolumn{9}{c}{Check, if needed, the algorithm used in the analysis do file to select pairs of counties} \\
+\end{longtable}
+\end{center}
+\end{normalsize}
+\end{landscape}
+
+\newpage
+\subsection{FE Estimations}
+
+\\This is the most interesting, analytical and reliable section of the report. We have run several double fixed effect regressions (by county and by year), which exploit our balanced panel dataset with observations at the county-year level. Here we present only few of them.\footnote{If interested, please refer to the analysis do file.}
+\\The main findings are shown in the two tables Tab.\ref{reg1} and Tab.\ref{reg2} where I use respectively either serious crimes or crime rate as dependent variables. All the regressions exploit a double fixed effect estimation (for county and for year). Notice also that for some regressions we compute robust st. errors while for other we do not (check the last rows of the tables). It is evident that these results in part confirm all our previous graphical analysis. In Tab.\ref{reg1}, except the regression presented in column 7, which is slightly significant, all other specifications are not. The effect of ethnicity minorities on serious crimes is not that strong, as previously shown also in the scatter plots of Fig.\ref{scatters}. However, in Tab.\ref{reg2}, all regressions are significant and robust. Notice also that both coefficients for minorities shares and for minorities share squared are significant (except for two out of the three models which refers to hispanic shares). This suggests again the presence of non-linear relationships between ethnicity groups (white included) and crimes. Finally, notice that, across all models, coefficients are negative while squared coefficients are positive.
+However, as discussed earlier as well, in our opinion, some other controls are absolutely needed before claiming for the presence of a real unbiased causal effect of ethnicity minorities on crime rates. Some of these controls are for instance percentage of female, median age, money spent by local governments in public safety, number of police officers etc.  
+
+\begin{landscape}
+\begin{table}[h!] \caption{Tab.\ref{reg1} FE Regressions using \textbf{serious crimes} as dependent variable \label{reg1}}
+\begin{center}
+\resizebox{\columnwidth}{!}{
+\begin{tabular}{l c c c c c c c c c} \hline\hline
+ & (1) & (2) & (3) & (4) & (5) & (6) & (7) & (8) & (9) \\
+Variables & serious\_crimes & serious\_crimes & serious\_crimes & serious\_crimes & serious\_crimes & serious\_crimes & serious\_crimes & serious\_crimes & serious\_crimes \\ \hline
+ &  &  &  &  &  &  &  &  &  \\
+White Share & 660.883*** & 660.883 & 611.946 &  &  &  &  &  &  \\
+ & (115.150) & (434.410) & (426.441) &  &  &  &  &  &  \\
+white\_share\_2 & -3.915*** & -3.915 & -3.831 &  &  &  &  &  &  \\
+ & (0.740) & (2.688) & (2.702) &  &  &  &  &  &  \\
+density\_pop & 11.305*** & 11.305 & 11.191 & 11.596*** & 11.596 & 11.540 & 11.550*** & 11.550 & 11.425 \\
+ & (0.487) & (8.326) & (8.377) & (0.488) & (8.289) & (8.294) & (0.486) & (8.241) & (8.288) \\
+pop\_25\_om\_coll\_share & -230.338*** & -230.338 &  & -212.388*** & -212.388 &  & -228.387*** & -228.387 &  \\
+ & (48.163) & (161.929) &  & (48.261) & (161.241) &  & (48.629) & (169.164) &  \\
+pop\_25\_om\_hs\_share &  &  & 127.181*** &  &  & 152.792*** &  &  & 117.220** \\
+ &  &  & (46.099) &  &  & (43.256) &  &  & (58.035) \\
+Black Share &  &  &  & -75.384 & -75.384 & -45.783 &  &  &  \\
+ &  &  &  & (81.932) & (81.245) & (92.018) &  &  &  \\
+black\_share\_2 &  &  &  & 2.083* & 2.083 & 2.306 &  &  &  \\
+ &  &  &  & (1.245) & (2.000) & (2.154) &  &  &  \\
+Hispanic Share &  &  &  &  &  &  & -112.073** & -112.073 & -79.819 \\
+ &  &  &  &  &  &  & (55.578) & (127.515) & (156.080) \\
+hispanic\_share\_2 &  &  &  &  &  &  & -0.023 & -0.023 & 0.688 \\
+ &  &  &  &  &  &  & (0.912) & (1.123) & (1.253) \\
+Constant & -24,545.462*** & -24,545.462 & -24,865.136 & 2,239.813*** & 2,239.813 & -2,686.459 & 2,596.279*** & 2,596.279*** & -1,350.014* \\
+ & (4,446.044) & (16,434.445) & (16,435.583) & (504.840) & (1,410.725) & (2,365.563) & (279.833) & (920.594) & (805.134) \\
+ &  &  &  &  &  &  &  &  &  \\
+Observations & 11,429 & 11,429 & 11,429 & 11,429 & 11,429 & 11,429 & 11,429 & 11,429 & 11,429 \\
+R-squared & 0.072 & 0.072 & 0.071 & 0.069 & 0.069 & 0.069 & 0.069 & 0.069 & 0.068 \\
+ Number of id & 3,108 & 3,108 & 3,108 & 3,108 & 3,108 & 3,108 & 3,108 & 3,108 & 3,108 \\
+\hline \hline
+ &  &  &  &  &  &  &  &  &  \\
+FE by Year & YES & YES & YES & YES & YES & YES & YES & YES & YES \\
+FE by County & YES & YES & YES & YES & YES & YES & YES & YES & YES \\
+Robust st.error & NO & YES & YES & NO & YES & YES & NO & YES & YES \\
+\hline \hline
+\multicolumn{10}{c}{ Standard errors in parentheses} \\
+\multicolumn{10}{c}{ *** p$<$0.01, ** p$<$0.05, * p$<$0.1} \\
+\end{tabular}
+}
+\begin{tablenotes}
+\begin{footnotesize}
+Note: we decided not to transform serious crimes into a rate because otherwise numbers would have been too small
+\end{footnotesize}
+\end{tablenotes}
+\end{center}
+\end{table}
+\end{landscape}
+
+
+\begin{landscape}
+\begin{table}[h!] \caption{Tab.\ref{reg2} FE Regressions using \textbf{crime rate} as dependent variable \label{reg2}}
+\begin{center}
+\resizebox{\columnwidth}{!}{
+\begin{tabular}{l c c c c c c c c c } \hline\hline
+ & (1) & (2) & (3) & (4) & (5) & (6) & (7) & (8) & (9) \\
+Variables & crime\_rate & crime\_rate & crime\_rate & crime\_rate & crime\_rate & crime\_rate & crime\_rate & crime\_rate & crime\_rate \\ \hline
+ &  &  &  &  &  &  &  &  &  \\
+White Share & -90.859*** & -90.859*** & -112.266*** &  &  &  &  &  &  \\
+ & (18.031) & (25.193) & (25.568) &  &  &  &  &  &  \\
+white\_share\_2 & 0.784*** & 0.784*** & 0.866*** &  &  &  &  &  &  \\
+ & (0.116) & (0.158) & (0.163) &  &  &  &  &  &  \\
+density\_pop & 0.768*** & 0.768 & 0.710 & 0.747*** & 0.747 & 0.702 & 0.739*** & 0.739 & 0.670 \\
+ & (0.076) & (0.547) & (0.606) & (0.077) & (0.562) & (0.612) & (0.076) & (0.547) & (0.617) \\
+pop\_25\_om\_coll\_share & -111.822*** & -111.822*** &  & -111.688*** & -111.688*** &  & -121.866*** & -121.866*** &  \\
+ & (7.530) & (15.246) &  & (7.549) & (15.562) &  & (7.613) & (15.909) &  \\
+pop\_25\_om\_hs\_share &  &  & 32.902*** &  &  & 43.988*** &  &  & 41.336*** \\
+ &  &  & (6.304) &  &  & (5.959) &  &  & (6.928) \\
+Black Share &  &  &  & -115.343*** & -115.343*** & -113.814*** &  &  &  \\
+ &  &  &  & (12.813) & (15.580) & (16.253) &  &  &  \\
+black\_share\_2 &  &  &  & 1.535*** & 1.535*** & 1.692*** &  &  &  \\
+ &  &  &  & (0.195) & (0.273) & (0.281) &  &  &  \\
+Hispanic Share &  &  &  &  &  &  & -47.729*** & -47.729*** & -38.544** \\
+ &  &  &  &  &  &  & (8.688) & (14.063) & (16.178) \\
+hispanic\_share\_2 &  &  &  &  &  &  & 0.056 & 0.056 & 0.401** \\
+ &  &  &  &  &  &  & (0.143) & (0.166) & (0.176) \\
+Constant & 4,525.943*** & 4,525.943*** & 4,526.212*** & 3,460.398*** & 3,460.398*** & 1,882.083*** & 3,051.904*** & 3,051.904*** & 1,495.464*** \\
+ & (696.302) & (1,015.638) & (1,039.336) & (79.135) & (122.114) & (243.251) & (43.903) & (72.276) & (173.536) \\
+ &  &  &  &  &  &  &  &  &  \\
+Observations & 11,371 & 11,371 & 11,371 & 11,371 & 11,371 & 11,371 & 11,371 & 11,371 & 11,371 \\
+R-squared & 0.120 & 0.120 & 0.100 & 0.116 & 0.116 & 0.100 & 0.115 & 0.115 & 0.093 \\
+ Number of id & 3,108 & 3,108 & 3,108 & 3,108 & 3,108 & 3,108 & 3,108 & 3,108 & 3,108 \\
+\hline \hline
+ &  &  &  &  &  &  &  &  &  \\
+FE by Year & YES & YES & YES & YES & YES & YES & YES & YES & YES \\
+FE by County & YES & YES & YES & YES & YES & YES & YES & YES & YES \\
+Robust st.error & NO & YES & YES & NO & YES & YES & NO & YES & YES \\
+\hline
+\multicolumn{10}{c}{ Standard errors in parentheses} \\
+\multicolumn{10}{c}{ *** p$<$0.01, ** p$<$0.05, * p$<$0.1} \\
+\end{tabular}
+}
+\begin{tablenotes}
+\begin{footnotesize}
+Note: Crime rate is the number of crimes committed per 100.000 people
+\end{footnotesize}
+\end{tablenotes}
+\end{center}
+\end{table}
+\end{landscape}
+
+
+\section{Appendix}
+
+\begin{figure}[h!]
+\caption{Fig.\ref{quartiles_5} \textbf{Evolution of Hispanic Share}: Counties Grouped by State, by Quartiles in Diff. of Black Shares and by Quartiles in Population Density. In Top Four Graphs Counties Are Grouped by Quartiles in Diff. of Black Shares (1970 - 2000) - In Bottom Four Graphs Counties Are Grouped by Quartiles in Diff. of Black Shares (1980 - 2000)}
+\subfloat {\includegraphics[width = 0.32\paperwidth]{../../output_large/analysis/hispanic_share_black_70_00_1.pdf}}
+\subfloat {\includegraphics[width = 0.32\paperwidth]{../../output_large/analysis/hispanic_share_black_70_00_2.pdf}}
+\subfloat {\includegraphics[width = 0.32\paperwidth]{../../output_large/analysis/hispanic_share_black_70_00_3.pdf}}
+\subfloat {\includegraphics[width = 0.32\paperwidth]{../../output_large/analysis/hispanic_share_black_70_00_4.pdf}}
+\subfloat {\includegraphics[width = 0.32\paperwidth]{../../output_large/analysis/hispanic_share_black_80_00_1.pdf}}
+\subfloat {\includegraphics[width = 0.32\paperwidth]{../../output_large/analysis/hispanic_share_black_80_00_2.pdf}}
+\subfloat {\includegraphics[width = 0.32\paperwidth]{../../output_large/analysis/hispanic_share_black_80_00_3.pdf}}
+\hspace*{.6in}
+\subfloat {\includegraphics[width = 0.32\paperwidth]{../../output_large/analysis/hispanic_share_black_80_00_4.pdf}}
+\label{quartiles_5}
+\end{figure}
+
+\begin{figure}[h!]
+\caption{Fig.\ref{quartiles_6} \textbf{Evolution of Black Share}: Counties Grouped by State, by Quartiles in Diff. of Hispanic Shares and by Quartiles in Population Density. In Top Four Graphs Counties Are Grouped by Quartiles in Diff. of Hispanic Shares (1970 - 2000) - In Bottom Four Graphs Counties Are Grouped by Quartiles in Diff. of Hispanic Shares (1980 - 2000)}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/black_share_hispanic_70_00_1.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/black_share_hispanic_70_00_2.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/black_share_hispanic_70_00_3.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/black_share_hispanic_70_00_4.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/black_share_hispanic_80_00_1.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/black_share_hispanic_80_00_2.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/black_share_hispanic_80_00_3.pdf}}
+\hspace*{.2in}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/black_share_hispanic_80_00_4.pdf}}
+\label{quartiles_6}
+\end{figure}
+
+\begin{figure}[h!]
+\caption{Fig.\ref{quartiles_7} \textbf{Evolution of Black Share}: Counties Grouped by State, by Quartiles in Diff. of Black Shares and by Quartiles in Population Density. In Top Four Graphs Counties Are Grouped by Quartiles in Diff. of Black Shares (1970 - 2000) - In Bottom Four Graphs Counties Are Grouped by Quartiles in Diff. of Black Shares (1980 - 2000)}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/black_share_black_70_00_1.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/black_share_black_70_00_2.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/black_share_black_70_00_3.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/black_share_black_70_00_4.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/black_share_black_80_00_1.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/black_share_black_80_00_2.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/black_share_black_80_00_3.pdf}}
+\hspace*{.2in}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/black_share_black_80_00_4.pdf}}
+\label{quartiles_7}
+\end{figure}
+
+\begin{figure}[h!]
+\caption{Fig.\ref{quartiles_8} \textbf{Evolution of White Share}: Counties Grouped by State, by Quartiles in Diff. of Hispanic Shares and by Quartiles in Population Density. In Top Four Graphs Counties Are Grouped by Quartiles in Diff. of Hispanic Shares (1970 - 2000) - In Bottom Four Graphs Counties Are Grouped by Quartiles in Diff. of Hispanic Shares (1980 - 2000)}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/white_share_hispanic_70_00_1.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/white_share_hispanic_70_00_2.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/white_share_hispanic_70_00_3.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/white_share_hispanic_70_00_4.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/white_share_hispanic_80_00_1.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/white_share_hispanic_80_00_2.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/white_share_hispanic_80_00_3.pdf}}
+\hspace*{.2in}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/white_share_hispanic_80_00_4.pdf}}
+\label{quartiles_8}
+\end{figure}
+
+\begin{figure}[h!]
+\caption{Fig.\ref{quartiles_9} \textbf{Evolution of White Share}: Counties Grouped by State, by Quartiles in Diff. of Black Shares and by Quartiles in Population Density. In Top Four Graphs Counties Are Grouped by Quartiles in Diff. of Black Shares (1970 - 2000) - In Bottom Four Graphs Counties Are Grouped by Quartiles in Diff. of Black Shares (1980 - 2000)}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/white_share_black_70_00_1.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/white_share_black_70_00_2.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/white_share_black_70_00_3.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/white_share_black_70_00_4.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/white_share_black_80_00_1.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/white_share_black_80_00_2.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/white_share_black_80_00_3.pdf}}
+\hspace*{.2in}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/white_share_black_80_00_4.pdf}}
+\label{quartiles_9}
+\end{figure}
+
+\begin{figure}[h!]
+\caption{Fig.\ref{quartiles_10} \textbf{Evolution of Crime Rate}: Counties Grouped by State, by Quartiles in Diff. of Black Shares and by Quartiles in Population Density. In Top Four Graphs Counties Are Grouped by Quartiles in Diff. of Black Shares (1970 - 2000) - In Bottom Four Graphs Counties Are Grouped by Quartiles in Diff. of Black Shares (1980 - 2000)}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/crime_rate_black_70_00_1.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/crime_rate_black_70_00_2.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/crime_rate_black_70_00_3.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/crime_rate_black_70_00_4.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/crime_rate_black_80_00_1.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/crime_rate_black_80_00_2.pdf}}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/crime_rate_black_80_00_3.pdf}}
+\hspace*{.2in}
+\subfloat {\includegraphics[width = 3in]{../../output_large/analysis/crime_rate_black_80_00_4.pdf}}
+\label{quartiles_10}
+\end{figure}
+
+
+\end{document}
