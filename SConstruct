@@ -19,5 +19,3 @@ Export('env')
 
 SConscript('source/SConscript')
 
-print os.environ['PATH']
-
