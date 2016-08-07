@@ -14,7 +14,6 @@ Python_Builder = Builder(action = build_function,
 						)
 
 env = Environment(ENV=os.environ, BUILDERS = {'Python_Builder' : Python_Builder})
-env.AppendENVPath('PATH', '/Users/ricardodahis/Google Drive/Ethnicity Project')
 Export('env')
 
 SConscript('source/SConscript')
