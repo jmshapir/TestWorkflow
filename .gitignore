@@ -1,5 +1,6 @@
 /temp/
 /output_local
+*.swp
 *.aux
 *.bbl
 *.bcf
