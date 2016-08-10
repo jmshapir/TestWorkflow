@@ -1,9 +1,14 @@
 clear
 version 12
 set more off
-adopath + ../../source/lib/stata/gslab_misc/ado
-preliminaries
+global path "~/Dropbox/Academic/Economics PhD/RA Shapiro/TestWorkFlow"
+adopath + "$path/source/lib/stata/ado/"
+*preliminaries
 
+cd "$path"
+cd "ethnicity/derived/DataBooks"
+
+program drop main prepare_data_1970 prepare_data_1980 prepare_data_1990 prepare_data_2000 merge_files
 program main
     prepare_data_1970
     prepare_data_1980
@@ -13,6 +18,7 @@ program main
 end
 
 program prepare_data_1970
+	
     use "../../raw/County and City Databooks/data/1947-1977/07736-0001-Data.dta", clear
 	
     rename FIPSTATE fipstate
@@ -108,7 +114,7 @@ program prepare_data_1970
 	    burglaries_1975 auto_thft_1975_f auto_thft_1975 black_pop_pct_1970 hispanic_pop_pct_1970    ///
 	    pop_25_om_hs_pct_1970 pop_25_om_coll_pct_1970
 
-    save_data "../temp/cleaned_1947_1977.dta", key(fipstate fipscnty) replace
+    save_data "temp/cleaned_1947_1977.dta", key(fipstate fipscnty) replace
 end
 
 program prepare_data_1980
@@ -171,7 +177,7 @@ program prepare_data_1980
 	
 	drop id property_crimes_1981_f property_crimes_1981
 
-    save_data "../temp/cleaned_1980.dta", key(fipstate fipscnty) replace
+    save_data "temp/cleaned_1980.dta", key(fipstate fipscnty) replace
 end
 
 program prepare_data_1990
@@ -190,7 +196,7 @@ program prepare_data_1990
     label var land_area_1990 "LAND AREA 1990"
 		
     keep fipstate fipscnty areaname_1990 land_area_1990_f land_area_1990 tot_pop_1990_f tot_pop_1990
-    save_data "../temp/cleaned_1990_COF01.dta", key(fipstate fipscnty) replace
+    save_data "temp/cleaned_1990_COF01.dta", key(fipstate fipscnty) replace
 
     use "../../raw/County and City Databooks/data/1994/COF02.DTA", clear
 
@@ -212,7 +218,7 @@ program prepare_data_1990
     
 	keep fipstate fipscnty areaname_1990 white_pop_1990_f white_pop_1990     ///
 	    black_pop_1990_f  black_pop_1990 hispanic_pop_1990_f hispanic_pop_1990
-	save_data "../temp/cleaned_1990_COF02.dta", key(fipstate fipscnty) replace
+	save_data "temp/cleaned_1990_COF02.dta", key(fipstate fipscnty) replace
 
     use "../../raw/County and City Databooks/data/1994/COF06.DTA", clear 
     
@@ -234,7 +240,7 @@ program prepare_data_1990
 	
 	keep fipstate fipscnty areaname_1990 serious_crimes_1991_f serious_crimes_1991   ///
 	    violent_crimes_1991_f violent_crimes_1991 crime_rate_1991_f crime_rate_1991
-	save_data "../temp/cleaned_1990_COF06.dta", key(fipstate fipscnty) replace
+	save_data "temp/cleaned_1990_COF06.dta", key(fipstate fipscnty) replace
 
     use "../../raw/County and City Databooks/data/1994/COF07.DTA", clear
     
@@ -256,12 +262,12 @@ program prepare_data_1990
     
 	keep fipstate fipscnty areaname_1990 pop_25_om_1990_f pop_25_om_1990 pop_25_om_hs_pct_1990_f   ///
 	    pop_25_om_hs_pct_1990 pop_25_om_coll_pct_1990_f pop_25_om_coll_pct_1990
-	save_data "../temp/cleaned_1990_COF07.dta", key(fipstate fipscnty) replace
+	save_data "temp/cleaned_1990_COF07.dta", key(fipstate fipscnty) replace
 
     * Merge of the temp dta just created
-    use "../temp/cleaned_1990_COF01.dta", replace
+    use "temp/cleaned_1990_COF01.dta", replace
     foreach x in 2 6 7{
-        merge 1:1 fipstate fipscnty using "../temp/cleaned_1990_COF0`x'.dta", ///
+        merge 1:1 fipstate fipscnty using "temp/cleaned_1990_COF0`x'.dta", ///
             assert(3) nogen keep(3)
     }
 
@@ -297,7 +303,7 @@ program prepare_data_1990
 	
 	drop violent_crimes_1991_f violent_crimes_1991 pop_25_om_hs_pct_1990 pop_25_om_coll_pct_1990
 
-    save_data "../temp/cleaned_1990.dta", key(fipstate fipscnty) replace
+    save_data "temp/cleaned_1990.dta", key(fipstate fipscnty) replace
 end
 
 program prepare_data_2000
@@ -313,7 +319,7 @@ program prepare_data_2000
 	replace id = "0" + id if length(id) == 4
 	
 	keep id areaname_2000 land_area_2000 tot_pop_2000 hispanic_pop_2000 hispanic_pop_pct_2000	
-    save_data "../../temp/cleaned_2000_cc00_tab_B1.dta.dta", key(id) replace
+    save_data "temp/cleaned_2000_cc00_tab_B1.dta.dta", key(id) replace
 
     import delimited "../../raw/County and City Databooks/data/2000/cc00_tab_B2.csv", clear
     rename b2geo01 id
@@ -327,7 +333,7 @@ program prepare_data_2000
 	replace id = "0" + id if length(id) == 4
 
 	keep id areaname_2000 white_pop_2000 white_pop_pct_2000 black_pop_2000 black_pop_pct_2000
-    save_data "../../temp/cleaned_2000_cc00_tab_B2.dta", key(id) replace
+    save_data "temp/cleaned_2000_cc00_tab_B2.dta", key(id) replace
 
     import delimited "../../raw/County and City Databooks/data/2000/cc00_tab_B6.csv", clear
 	rename b6geo01 id
@@ -349,7 +355,7 @@ program prepare_data_2000
 	keep id areaname_2000 serious_crimes_1999_f serious_crimes_1999 violent_crimes_1999_f       ///
         violent_crimes_1999 property_crimes_1999_f property_crimes_1999 serious_crimes_1990_f   ///
 		serious_crimes_1990 crime_rate_1999_f crime_rate_1999
-	save_data "../../temp/cleaned_2000_cc00_tab_B6.dta", key(id) replace
+	save_data "temp/cleaned_2000_cc00_tab_B6.dta", key(id) replace
 
     import excel "/raw_databooks/2007/cc07_tabB4.xls", cellrange(A9:M3208) clear
     rename A areaname_2000
@@ -378,7 +384,7 @@ program prepare_data_2000
     * For these variables we do not have id for areaname. We drop double observations.
     sort areaname_2000 pop_25_om_2000 
     drop if areaname_2000 == areaname_2000[_n-1]
-    save_data "../../temp/cleaned_2000_cc07_tabB4.dta",key(areaname_2000) replace
+    save_data "temp/cleaned_2000_cc07_tabB4.dta",key(areaname_2000) replace
 
 	import excel "../../raw/County and City Databooks/data/2007/cc07_tabB1.xls", cellrange(B10:C3209) clear
 	rename B id
@@ -391,17 +397,17 @@ program prepare_data_2000
     drop if areaname_2000 == "SouthBoston,VA" | areaname_2000 == "YellowstoneNationalPark,MT"
 	sort areaname_2000 id
 	drop if areaname_2000 == areaname_2000[_n-1]
-	save_data "../../temp/cleaned_2000_cc07_tabB1.dta",key(id areaname_2000) replace
+	save_data "temp/cleaned_2000_cc07_tabB1.dta",key(id areaname_2000) replace
 
 	/*
 	Before merging all dta for 2000 we need to merge by areaname the 2 datasets
 	from 2007 (referred to 2000 data) in order to associate an id to counties
 	*/
-	merge 1:1 areaname_2000 using "../../temp/cleaned_2000_cc07_tabB4.dta", assert(3) nogen keep(3)
+	merge 1:1 areaname_2000 using "temp/cleaned_2000_cc07_tabB4.dta", assert(3) nogen keep(3)
 	
 	*Now merge with all other dta for 2000
     foreach x in cleaned_2000_cc00_tab_B1.dta cleaned_2000_cc00_tab_B2 cleaned_2000_cc00_tab_B6{
-		merge 1:1 id using "../../temp/`x'.dta", assert(1 2 3) nogen keep(3)
+		merge 1:1 id using "temp/`x'.dta", assert(1 2 3) nogen keep(3)
     }
 
     * Destring variables
@@ -448,13 +454,13 @@ program prepare_data_2000
 	    violent_crimes_1999 violent_crimes_1999_f property_crimes_1999 property_crimes_1999_f pop_25_om_hs_pct_2000     ///
         pop_25_om_coll_pct_2000
 	
-    save_data "../../temp/cleaned_2000.dta", key(fipstate fipscnty) replace
+    save_data "temp/cleaned_2000.dta", key(fipstate fipscnty) replace
 end
 
 program merge_files
-    use "../../temp/cleaned_1947_1977.dta", clear
+    use "temp/cleaned_1947_1977.dta", clear
     foreach x in cleaned_1980 cleaned_1990 cleaned_2000{
-        merge 1:1 fipstate fipscnty using "../temp/`x'.dta", assert(1 2 3) nogen keep(3)
+        merge 1:1 fipstate fipscnty using "temp/`x'.dta", assert(1 2 3) nogen keep(3)
     }
 
 	drop *_f
