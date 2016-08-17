@@ -1,0 +1,27 @@
+\documentclass{article}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\begin{document}
+\begin{table}[tbp] \centering%
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\caption{Pairs of Counties to Apply Diff-in-Diff}%
+\begin{tabularx}{\textwidth}{lCCCCCCCC}
+\toprule
+areaname&year&treated\_hispanic&density\_pop&group&diff\_white&diff\_black&diff\_hispanic&diff\_crime\_rate \tabularnewline
+\midrule\addlinespace[1.5ex]
+YELL, AR&2000&1&22.77909&5&-10.06802&-.6225978&11.73335&-42 \tabularnewline
+GRANT, AR&2000&0&26.05063&5&-1.175682&-.2369099&.5600613&-1607 \tabularnewline
+MONTGOMERY, MO&2000&0&22.59963&35&-1.035057&-.5016274&.3782538&-736 \tabularnewline
+SALINE, MO&2000&1&31.42328&35&-3.387169&-.3594537&3.535695&-126 \tabularnewline
+CLINTON, MO&2000&0&45.29594&35&-.5745773&-.5072395&.2425395&-1417 \tabularnewline
+PETTIS, MO&2000&1&57.52263&35&-3.778992&-.2553284&3.119068&1883 \tabularnewline
+DICKSON, TN&2000&0&88.07347&62&-1.285172&-.3908157&.6166782&-740 \tabularnewline
+WARREN, TN&2000&1&88.39723&62&-3.853073&-.2642412&4.088191&235 \tabularnewline
+RHEA, TN&2000&0&89.87342&62&-1.412704&-.3443716&1.126786&-1044 \tabularnewline
+ANDERSON, TN&2000&0&211.0355&62&-1.314964&-.1706004&.5450808&-1636 \tabularnewline
+HAMBLEN, TN&2000&1&361.0435&62&-4.154198&-.4798846&5.328734&742 \tabularnewline
+\bottomrule \addlinespace[1.5ex]
+\multicolumn{9}{p{\textwidth}}{\begin{footnotesize} Check, if needed, the algorithm used to pick these pairs of counties\end{footnotesize}}
+\end{tabularx}%
+\end{table}%
+\end{document}

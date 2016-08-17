@@ -1,5 +1,8 @@
 
 Import('env')
 
-env.Command("../../*", "analysis.do",
+env.Command("./source/analysis", "analysis.do",
             "stata-mp -b do $SOURCE &")
+
+#env.Command("../../output/analysis", "../../analysis.log",
+#			"mv $SOURCE $TARGET")

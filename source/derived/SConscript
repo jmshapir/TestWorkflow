@@ -1,7 +1,10 @@
 
 Import('env')
 
-env.Command("../../*", "build.do",
+env.Command("./*", "build.do",
             "stata-mp -b do $SOURCE &")
+
+#env.Command("../../output/derived", "../../build.log",
+#			"mv $SOURCE $TARGET")
 
 

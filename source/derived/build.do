@@ -1,14 +1,14 @@
-clear
+clear all
 version 12
 set more off
-global path "~/Dropbox/Academic/Economics PhD/RA Shapiro/TestWorkFlow"
-adopath + "$path/source/lib/stata/ado/"
-*preliminaries
+//global path "~/Dropbox/Academic/PhD/RA Shapiro/TestWorkFlow"
+//adopath + "$path/source/lib/stata/ado/"
 
-cd "$path"
-cd "ethnicity/derived/DataBooks"
+//cd "$path"
 
-program drop main prepare_data_1970 prepare_data_1980 prepare_data_1990 prepare_data_2000 merge_files
+adopath + "source/lib/stata/ado/"
+
+
 program main
     prepare_data_1970
     prepare_data_1980
@@ -18,8 +18,8 @@ program main
 end
 
 program prepare_data_1970
-	
-    use "../../raw/County and City Databooks/data/1947-1977/07736-0001-Data.dta", clear
+    use "raw/County and City Databooks/data/1947-1977/07736-0001-Data.dta", clear
+	//use "../external/raw_databooks/1947-1977/07736-0001-Data.dta", clear
 	
     rename FIPSTATE fipstate
     rename FIPSCNTY fipscnty
@@ -118,9 +118,11 @@ program prepare_data_1970
 end
 
 program prepare_data_1980
-    local dict_file "../../raw/County and City Databooks/data/1983/08256-0001-Setup.dct"
-	local data_file "../../raw/County and City Databooks/data/1983/08256-0001-Data.txt"
-    infile using `dict_file', using (`data_file') clear
+	local dict_file "raw/County and City Databooks/data/1983/08256-0001-Setup.dct"
+	local data_file "raw/County and City Databooks/data/1983/08256-0001-Data.txt"
+    //local dict_file "../external/raw_databooks/1983/08256-0001-Setup.dct"
+	//local data_file "../external/raw_databooks/1983/08256-0001-Data.txt"
+    infile using `"`dict_file'"', using (`"`data_file'"') clear
 
 	rename GEO8001A id
     rename GEOG8002 areaname_1980
@@ -181,7 +183,8 @@ program prepare_data_1980
 end
 
 program prepare_data_1990
-    use "../../raw/County and City Databooks/data/1994/COF01.DTA", clear
+	use "temp/COF01.dta", clear
+    //use "../external/raw_databooks/1994/COF01.DTA", clear
 
 	rename state fipstate
 	rename county fipscnty
@@ -198,7 +201,8 @@ program prepare_data_1990
     keep fipstate fipscnty areaname_1990 land_area_1990_f land_area_1990 tot_pop_1990_f tot_pop_1990
     save_data "temp/cleaned_1990_COF01.dta", key(fipstate fipscnty) replace
 
-    use "../../raw/County and City Databooks/data/1994/COF02.DTA", clear
+	use "temp/COF02.dta", clear
+    //use "../external/raw_databooks/1994/COF02.DTA", clear
 
     rename state fipstate
 	rename county fipscnty
@@ -220,7 +224,8 @@ program prepare_data_1990
 	    black_pop_1990_f  black_pop_1990 hispanic_pop_1990_f hispanic_pop_1990
 	save_data "temp/cleaned_1990_COF02.dta", key(fipstate fipscnty) replace
 
-    use "../../raw/County and City Databooks/data/1994/COF06.DTA", clear 
+	use "temp/COF06.dta", clear
+    //use "../external/raw_databooks/1994/COF06.DTA", clear 
     
 	rename state fipstate
 	rename county fipscnty
@@ -242,7 +247,8 @@ program prepare_data_1990
 	    violent_crimes_1991_f violent_crimes_1991 crime_rate_1991_f crime_rate_1991
 	save_data "temp/cleaned_1990_COF06.dta", key(fipstate fipscnty) replace
 
-    use "../../raw/County and City Databooks/data/1994/COF07.DTA", clear
+	use "temp/COF07.dta", clear
+    //use "../external/raw_databooks/1994/COF07.DTA", clear
     
     rename state fipstate
 	rename county fipscnty
@@ -307,7 +313,8 @@ program prepare_data_1990
 end
 
 program prepare_data_2000
-    import delimited "../../raw/County and City Databooks/data/2000/cc00_tab_B1.csv", clear
+	import delimited "raw/County and City Databooks/data/2000/cc00_tab_B1.csv", clear
+    //import delimited "../external/raw_databooks/2000/cc00_tab_B1.csv", clear
     rename b1geo01 id
 	rename b1geo09 areaname_2000
 	rename b1lnd01 land_area_2000
@@ -321,7 +328,8 @@ program prepare_data_2000
 	keep id areaname_2000 land_area_2000 tot_pop_2000 hispanic_pop_2000 hispanic_pop_pct_2000	
     save_data "temp/cleaned_2000_cc00_tab_B1.dta.dta", key(id) replace
 
-    import delimited "../../raw/County and City Databooks/data/2000/cc00_tab_B2.csv", clear
+	import delimited "raw/County and City Databooks/data/2000/cc00_tab_B2.csv", clear
+    //import delimited "../external/raw_databooks/2000/cc00_tab_B2.csv", clear
     rename b2geo01 id
 	rename b2geo09 areaname_2000
 	rename b2pop05 white_pop_2000
@@ -335,7 +343,8 @@ program prepare_data_2000
 	keep id areaname_2000 white_pop_2000 white_pop_pct_2000 black_pop_2000 black_pop_pct_2000
     save_data "temp/cleaned_2000_cc00_tab_B2.dta", key(id) replace
 
-    import delimited "../../raw/County and City Databooks/data/2000/cc00_tab_B6.csv", clear
+	import delimited "raw/County and City Databooks/data/2000/cc00_tab_B6.csv", clear
+    //import delimited "../external/raw_databooks/2000/cc00_tab_B6.csv", clear
 	rename b6geo01 id
 	rename b6geo09 areaname_2000
 	rename b6crm01f serious_crimes_1999_f
@@ -357,7 +366,8 @@ program prepare_data_2000
 		serious_crimes_1990 crime_rate_1999_f crime_rate_1999
 	save_data "temp/cleaned_2000_cc00_tab_B6.dta", key(id) replace
 
-    import excel "/raw_databooks/2007/cc07_tabB4.xls", cellrange(A9:M3208) clear
+	import excel "raw/County and City Databooks/data/2007/cc07_tabB4.xls", cellrange(A9:M3208) clear
+    //import excel "../external/raw_databooks/2007/cc07_tabB4.xls", cellrange(A9:M3208) clear
     rename A areaname_2000
 	rename D pop_25_om_2000
 	rename E pop_25_om_hs_pct_2000
@@ -386,7 +396,8 @@ program prepare_data_2000
     drop if areaname_2000 == areaname_2000[_n-1]
     save_data "temp/cleaned_2000_cc07_tabB4.dta",key(areaname_2000) replace
 
-	import excel "../../raw/County and City Databooks/data/2007/cc07_tabB1.xls", cellrange(B10:C3209) clear
+	import excel "raw/County and City Databooks/data/2007/cc07_tabB1.xls", cellrange(B10:C3209) clear
+	//import excel "../external/raw_databooks/2007/cc07_tabB1.xls", cellrange(B10:C3209) clear
 	rename B id
 	rename C areaname_2000
     replace areaname_2000 = subinstr(areaname_2000," ","",.)
@@ -468,8 +479,8 @@ program merge_files
 	* Inconsistent data across 2000 and 2007 (for instance perc of 25_om_hs and 25_om_coll or share_black)
 	drop if areaname_2000 == "Richmond,VA" | areaname_2000 == "Suffolk,VA"
 	
-    save_data "../../output_large/derived/county_panel.dta", key(fipstate fipscnty) replace
+    save_data "output_large/derived/county_panel.dta", key(fipstate fipscnty) replace
 end
-
+ 
 * EXECUTE
 main

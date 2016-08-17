@@ -1,0 +1,16 @@
+\documentclass{article}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\begin{document}
+\begin{table}[tbp] \centering%
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\caption{Pairs of Counties to Apply Diff-in-Diff}%
+\begin{tabularx}{\textwidth}{lCCCCCCCC}
+\toprule
+areaname&year&treated\_hispanic&density\_pop&group&diff\_white&diff\_black&diff\_hispanic&diff\_crime\_rate \tabularnewline
+\midrule\addlinespace[1.5ex]
+\bottomrule \addlinespace[1.5ex]
+\multicolumn{9}{p{\textwidth}}{\begin{footnotesize} Check, if needed, the algorithm used to pick these pairs of counties\end{footnotesize}}
+\end{tabularx}%
+\end{table}%
+\end{document}

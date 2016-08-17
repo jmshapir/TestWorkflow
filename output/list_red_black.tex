@@ -1,0 +1,37 @@
+\documentclass{article}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\begin{document}
+\begin{table}[tbp] \centering%
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\caption{Pairs of Counties to Apply Diff-in-Diff}%
+\begin{tabularx}{\textwidth}{lCCCCCCCC}
+\toprule
+areaname&year&treated\_black&density\_pop&group&diff\_white&diff\_black&diff\_hispanic&diff\_crime\_rate \tabularnewline
+\midrule\addlinespace[1.5ex]
+UNION, FL&1990&1&42.71667&5&5.748894&-5.960619&.1100709&-220 \tabularnewline
+SANTA ROSA, FL&1990&0&80.32284&5&.1530838&-.5736103&.2483597&-841 \tabularnewline
+ST. JOHNS, FL&1990&1&137.6503&5&5.294914&-5.733182&-.8966024&-427 \tabularnewline
+MONROE, GA&1990&1&43.21465&7&5.912304&-6.233391&.1913672&-1026 \tabularnewline
+PICKENS, GA&1990&0&62.2069&7&.4573669&-.7945331&-.831281&-953 \tabularnewline
+CECIL, MD&1990&0&205.0201&13&.3099289&-.7012434&.163556&-83 \tabularnewline
+CALVERT, MD&1990&1&238.9395&13&5.814751&-6.481082&.1659383&-1126 \tabularnewline
+HICKMAN, TN&2000&0&36.37031&32&-.779274&-.6014552&.5958345&-1034 \tabularnewline
+FAYETTE, TN&2000&1&40.85957&32&6.903187&-8.244499&.5258796&-4259 \tabularnewline
+HARDIN, TN&2000&0&44.25259&32&-.2527542&-.7144005&.6321041&-2228 \tabularnewline
+NELSON, VA&1990&1&27.07203&35&4.078499&-5.064568&.2351633&-447 \tabularnewline
+FLOYD, VA&1990&0&31.4267&35&.4631577&-.7675416&.0590482&-191 \tabularnewline
+GRAYSON, VA&1990&0&36.74492&35&.1679764&-.3861105&.0867775&-75 \tabularnewline
+LOUISA, VA&1990&1&40.81325&35&6.44416&-6.831221&-.6411452&-1152 \tabularnewline
+BOTETOURT, VA&1990&0&46.02578&35&.0684204&-.3362231&.1080662&-177 \tabularnewline
+WESTMORELAND, VA&1990&1&67.59825&35&4.960636&-5.024292&-.2228891&-139 \tabularnewline
+WARREN, VA&1990&0&122.1589&35&.2538223&-.6521015&-.1173728&-1536 \tabularnewline
+ROCKBRIDGE, VA&2000&0&34.68&36&-.9130402&-.1628597&.2715242&-1169 \tabularnewline
+CHARLES CITY, VA&2000&1&37.847&36&7.009424&-8.329231&.2676817&-1605 \tabularnewline
+KING WILLIAM, VA&2000&1&47.80363&36&6.449493&-7.517775&.3080419&-1418 \tabularnewline
+BOTETOURT, VA&2000&0&56.16206&36&-.0996017&-.9669414&.0213374&-635 \tabularnewline
+\bottomrule \addlinespace[1.5ex]
+\multicolumn{9}{p{\textwidth}}{\begin{footnotesize} Check, if needed, the algorithm used to pick these pairs of counties\end{footnotesize}}
+\end{tabularx}%
+\end{table}%
+\end{document}
