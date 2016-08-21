@@ -1,10 +1,6 @@
 clear all
 version 12
 set more off
-//global path "~/Dropbox/Academic/PhD/RA Shapiro/TestWorkFlow"
-//adopath + "$path/source/lib/stata/ado/"
-
-//cd "$path"
 
 adopath + "source/lib/stata/ado/"
 
