@@ -1,2 +1,4 @@
 /temp/
 /output_local
+*.pyc
+
