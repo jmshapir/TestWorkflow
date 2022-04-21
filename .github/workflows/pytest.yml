@@ -1,18 +1,18 @@
 # Install Python dependencies and run unit tests.
 #
 # Note: These tests should run quickly; we set a timeout to
-# 60 minutes to catch possible hang-ups, should they occur.
+# 20 minutes to catch possible hang-ups, should they occur.
 
 name: Workflow Sample Unit Test
 
 on:
-  push:
+  pull_request:
     branches: [ Veli ]
 
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 60
+    timeout-minutes: 20
     strategy:
       matrix:
         os: [ ubuntu-latest ]
