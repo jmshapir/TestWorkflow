@@ -6,7 +6,7 @@
 name: Workflow Sample Unit Test
 
 on:
-  push:
+  pull:
     branches: [ Veli ]
 
 jobs:
