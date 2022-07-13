@@ -7,6 +7,6 @@ name: sample_actions
 
 jobs:
     steps:
-      - run: echo "Action 1"
-      #- run: echo "Action 2"
+        run: echo "Action 1"
+        #run: echo "Action 2"
 
