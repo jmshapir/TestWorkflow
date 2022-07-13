@@ -1,0 +1,12 @@
+on:
+  pull_request:
+    branches:
+      - main
+
+name: sample_actions
+
+jobs:
+    steps:
+      - run: echo "Action 1"
+      #- run: echo "Action 2"
+
