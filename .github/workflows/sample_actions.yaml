@@ -6,6 +6,7 @@ on:
 name: sample_actions
 
 jobs:
+  sample-job:
     runs-on: ubuntu-latest
     steps:
       - name: simple-step
