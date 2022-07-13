@@ -6,7 +6,9 @@ on:
 name: sample_actions
 
 jobs:
+    runs-on: ubuntu-latest
     steps:
+      - name: simple-step
         run: echo "Action 1"
         #run: echo "Action 2"
 
